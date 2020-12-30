@@ -1,0 +1,50 @@
+<?php
+
+use Urgent\Cargus\Controller\Adminhtml\order\Index;
+
+?>
+
+
+
+<div class="content-header">
+    <?php
+    if (isset($_GET['BarCode'])) {
+        echo '<h3>Urgent Cargus - Detaliu AWB '.addslashes($_GET['BarCode']).'</h3>';
+    } elseif (isset($_GET['OrderId'])) {
+        echo '<h3>Urgent Cargus - ISTORIC AWB-uri pentru comanda '.addslashes($_GET['OrderId']).'</h3>';
+    } else {
+        echo '<h3>Urgent Cargus - ISTORIC expeditii pentru punctul de lucru</h3>';
+    }
+    ?>
+</div>
+<?php
+$listaComenzi = null;
+$listaAwburi = null;
+$detaliuAwb = null;
+
+if (isset($_GET['BarCode'])) {
+//    $BarCode = addslashes($_GET['BarCode']);
+//    $detaliuAwb = Urgent_Cargus_Adminhtml_IndexController::getAwbByBarcode($BarCode);
+//    if (is_array($detaliuAwb) && count($detaliuAwb) == 1) {
+//        $detaliuAwb = $detaliuAwb[0];
+//    }
+} elseif (isset($_GET['OrderId'])) {
+//    $OrderId = addslashes($_GET['OrderId']);
+//    $listaAwburi = Urgent_Cargus_Adminhtml_IndexController::getAwbsByOrderId($OrderId);
+} else {
+    $pickupPoints = Index::getPickupPoints();
+
+    echo var_export( $pickupPoints, true);
+//    $go = false;
+//    if (is_array($pickupPoints)) {
+//        if (count($pickupPoints) > 0 && !isset($pickupPoints['error'])) {
+//            $go = true;
+//        }
+//    }
+//    $LocationId = Mage::getStoreConfig('urgentcargus/pickup_id');
+//    if (isset($_GET['LocationId'])) {
+//        $LocationId = addslashes($_GET['LocationId']);
+//    }
+//    $listaComenzi = Urgent_Cargus_Adminhtml_IndexController::getOrderHistory($LocationId);
+}
+?>

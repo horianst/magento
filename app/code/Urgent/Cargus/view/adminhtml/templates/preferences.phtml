@@ -1,0 +1,173 @@
+<div class="fieldset-wrapper">
+    <div class="fieldset-wrapper-title">
+        <strong class="title">
+            <span>Preferinte</span>
+        </strong>
+    </div>
+</div>
+<?php
+
+$originalValue = $block->getConfigParams();
+
+$pickupPoints = $block->getPickupPoints();
+$go = false;
+if (is_array($pickupPoints)) {
+    if (count($pickupPoints) > 0 && !isset($pickupPoints['error'])) {
+        $slimPickupPoints = [];
+
+        foreach ($pickupPoints as $pickupPoint) {
+            $slimPickupPoints[$pickupPoint->LocationId] = $pickupPoint->Name;
+        }
+
+        $go = true;
+    }
+}
+
+if (!$block->checkCredentials()) {
+    echo '<br>Userul sau parola contului de utilizator folosit nu sunt corecte!';
+} else {
+    if (!$go) {
+        echo '<br>Pe acest cont de utilizator nu este definit niciun punct de ridicare!<br>Logati-va pe site-ul Urgent Cargus si asignati un punct de ridicare acestui cont.';
+    } else {
+        ?>
+        <form
+            action="http://uc.magento2.test/admin_h215q8/cargus/preferences/index/key/249b517ae1c210072414f90c51da8f5f2a46361f5879ab13fd68d8396576b297/"
+            method="post" id="preferences_form_id">
+            <div class="admin__fieldset-wrapper-content _hide">
+                <fieldset class="admin__fieldset">
+                    <input name="form_key" type="hidden" value="<?php
+                    echo $block->getFormKey(); ?>"/>
+                    <?php
+                    select(
+                        'Punctul de ridicare',
+                        'collect_point',
+                        'collect_point_id',
+                        $slimPickupPoints,
+                        $originalValue['collect_point'] ?? null
+                    );
+                    select(
+                        'Deschidere colet',
+                        'open_package',
+                        'open_package_id',
+                        ['Da', 'Nu'],
+                        $originalValue['open_package'] ?? null
+                    );
+                    select('Asigurare', 'insurance', 'insurance_id', ['Da', 'Nu'], $originalValue['insurance'] ?? null);
+                    select(
+                        'Livrare sambata',
+                        'saturday_delivery',
+                        'saturday_delivery_id',
+                        ['Da', 'Nu'],
+                        $originalValue['saturday_delivery'] ?? null
+                    );
+                    select(
+                        'Livrare dimineata',
+                        'morning_delivery',
+                        'morning_delivery_id',
+                        ['Da', 'Nu'],
+                        $originalValue['morning_delivery'] ?? null
+                    );
+                    select(
+                        'Ramburs',
+                        'repayment',
+                        'repayment_id',
+                        ['Numerar', 'Cont colector'],
+                        $originalValue['repayment'] ?? null
+                    );
+                    select(
+                        'Platitor',
+                        'payer',
+                        'payer_id',
+                        ['Expeditior', 'Destinatar'],
+                        $originalValue['payer'] ?? null
+                    );
+                    select(
+                        'Localitati',
+                        'cities',
+                        'cities_id',
+                        [
+                            'Apeleaza serverul pentru obtinerea localitatilor',
+                            'Utilizeaza lista de localitati salvata local'
+                        ],
+                        $originalValue['cities'] ?? null
+                    );
+                    select(
+                        'Tip expeditie implicita',
+                        'expedition_type',
+                        'expedition_type_id',
+                        ['Colet', 'Plic'],
+                        $originalValue['expedition_type'] ?? null
+                    );
+                    input(
+                        'Plafon transport gratuit',
+                        'max_free_transport',
+                        'number',
+                        'max_free_transport_id',
+                        $originalValue['max_free_transport'] ?? null
+                    );
+                    input(
+                        'Cost fix transport',
+                        'fixed_cost_transport',
+                        'number',
+                        'fixed_cost_transport_id',
+                        $originalValue['fixed_cost_transport'] ?? null
+                    );
+
+                    submitButton('Salveaza preferintele', 'preferences_form_id');
+                    ?>
+
+                </fieldset>
+            </div>
+        </form>
+        <?php
+    }
+}
+
+function select($label, $name, $id, $data, $select)
+{
+    echo '<div class="admin__field">
+                <div class="admin__field-label">
+                    <label>
+                    <span>
+                        ' . $label . '
+                    </span>
+                    </label>
+                </div>
+                <div class="admin__field-control">
+                    <select class="admin__control-select"  name="' . $name . '" id="' . $id . '">
+                    ';
+
+    foreach ($data as $index => $value) {
+        echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
+    }
+
+    echo '</select>
+                </div>
+            </div>';
+}
+
+function input($label, $name, $type, $id, $data)
+{
+    echo '<div class="admin__field">
+                <div class="admin__field-label">
+                    <label>
+                    <span>
+                        ' . $label . '
+                    </span>
+                    </label>
+                </div>
+                <div class="admin__field-control">
+                    <input class="admin__control-text" type="' . $type . '" name="' . $name . '" id="' . $id . '" value="' . $data . '">
+                </div>
+            </div>';
+}
+
+function submitButton($value, $formId)
+{
+    echo ' <button type="submit" class="custom-button-class action-basic">
+        <span>' . $value . '</span>
+    </button>';
+}
+
+?>
+
