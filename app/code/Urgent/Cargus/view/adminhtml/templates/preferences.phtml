@@ -30,9 +30,8 @@ if (!$block->checkCredentials()) {
         echo '<br>Pe acest cont de utilizator nu este definit niciun punct de ridicare!<br>Logati-va pe site-ul Urgent Cargus si asignati un punct de ridicare acestui cont.';
     } else {
         ?>
-        <form
-            action="http://uc.magento2.test/admin_h215q8/cargus/preferences/index/key/249b517ae1c210072414f90c51da8f5f2a46361f5879ab13fd68d8396576b297/"
-            method="post" id="preferences_form_id">
+
+        <form method="post" id="preferences_form_id">
             <div class="admin__fieldset-wrapper-content _hide">
                 <fieldset class="admin__fieldset">
                     <input name="form_key" type="hidden" value="<?php

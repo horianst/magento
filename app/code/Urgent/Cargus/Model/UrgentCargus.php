@@ -63,6 +63,29 @@ class UrgentCargus
         }
     }
 
+    public function getOrders($locationId)
+    {
+        try{
+            $client = new Client();
+            $response = $client->request('GET', $this->url . '/Orders', [
+                'headers' => [
+                    'Ocp-Apim-Subscription-Key' => $this->key,
+                    'Authorization' => 'Bearer ' . $this->token,
+                    'Content-Type' => 'application/json'
+                ],
+                'query' => [
+                    'locationId' => $locationId,
+                    'status' =>  1,
+                    'pageNumber' =>  1,
+                    'itemsPerPage' =>  100,
+                ]
+            ]);
+            return json_decode($response->getBody());
+        } catch (\Exception $e){
+            return $e->getMessage();
+        }
+    }
+
     /**
      * Fetch some data from API
      */

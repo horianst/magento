@@ -1,1 +1,170 @@
- <p>Hello World! history</p>
+<div class="fieldset-wrapper">
+    <div class="fieldset-wrapper-title">
+        <strong class="title">
+            <span>Istoric</span>
+        </strong>
+    </div>
+</div>
+
+<div class="admin__fieldset-wrapper-content _hide">
+
+    <form id="pickup_form" method="get">
+        <fieldset class="admin__fieldset">
+
+            <?php
+            $pickupPoints = $block->getPickupPoints();
+            $go = false;
+
+            if (is_array($pickupPoints)) {
+                if (count($pickupPoints) > 0 && !isset($pickupPoints['error'])) {
+                    $go = true;
+                    $slimPickupPoints = [];
+
+                    foreach ($pickupPoints as $pickupPoint) {
+                        $slimPickupPoints[$pickupPoint->LocationId] = $pickupPoint->Name;
+                    }
+                }
+            }
+
+
+            if($block->getRequest()->getParam('collect_point')){
+                $originalValue['collect_point'] = $block->getRequest()->getParam('collect_point');
+            } else {
+                $originalValue = $block->getConfigParams();
+            }
+
+            select(
+                'Expeditii pentru punctul de lucru: ',
+                'collect_point',
+                'collect_point_id',
+                $slimPickupPoints,
+                $originalValue['collect_point'] ?? null
+            );
+
+            $orders = $block->getOrders($originalValue['collect_point']);
+            ?>
+        </fieldset>
+    </form>
+</div>
+
+<?php
+if ($orders != null) {
+    if (!$go) {
+        echo 'Pe acest cont de utilizator nu este definit niciun punct de ridicare!<br>Logati-va pe site-ul Urgent Cargus si asignati un punct de ridicare acestui cont.';
+    } else {
+
+        if (isset($orders['error'])) {
+            echo $orders['error'];
+        } else {
+            if (count($orders) == 0) {
+                echo 'Nu exista nicio comanda expediata din acest punct de lucru!';
+            } else { ?>
+
+                <div class="admin__data-grid-wrap">
+                    <table class="data-grid data-grid-draggable">
+                        <thead>
+                        <tr>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content">ID Comanda</span>
+                            </th>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content">Data validare</span>
+                            </th>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content">Interval ridicare</span>
+                            </th>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content">Data procesare</span>
+                            </th>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content">Awb-uri</span>
+                            </th>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content">Plicuri</span>
+                            </th>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content">Colete</span>
+                            </th>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content">Greutare</span>
+                            </th>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content">Status</span>
+                            </th>
+                            <th class="data-grid-th">
+                                <span class="data-grid-cell-content"></span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <?php
+                        foreach ($orders as $index => $order) {
+                            tableRow($index, $order);
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+
+                    <p>Sunt afisate ultimele <?php
+                        echo count($orders); ?> comenzi expediate din punctul curent de ridicare!</p>
+                </div>
+
+            <?php
+            }
+        }
+    }
+} ?>
+
+
+<?php
+function tableRow($index, $order)
+{
+    $extraClass = ($index % 2 == 0) ? '' : ' _odd-row';
+
+    echo '<tr class="data-row' . $extraClass . '">';
+
+    echo '<td><div class="data-grid-cell-content">' . $order->OrderId . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . ($order->ValidationDate ? date(
+            'd.m.Y',
+            strtotime($order->ValidationDate)
+        ) : '-') . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . ($order->PickupStartDate ? date(
+                'd.m.Y H:i',
+                strtotime($order->PickupStartDate)
+            ) . ' - ' . date('H:i', strtotime($order->PickupEndDate)) : '-') . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . ($order->ProcessedDate ? date(
+            'd.m.Y',
+            strtotime($order->ProcessedDate)
+        ) : '-') . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $order->NoAwb . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $order->NoEnvelop . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $order->NoParcel . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $order->TotalWeight . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $order->OrdStatus . '</div></td>';
+
+    echo '<td><div class="data-grid-cell-content"> ' . ($order->NoAwb > 0 ? '<a class="action-select" href="/cargus/history/view?id=' . $order->OrderId . '">Afiseaza</a>' : '') . '</div></td></tr>';
+}
+
+function select($label, $name, $id, $data, $select)
+{
+    echo '<div class="admin__field">
+                <div class="admin__field-label">
+                    <label>
+                    <span>
+                        ' . $label . '
+                    </span>
+                    </label>
+                </div>
+                <div class="admin__field-control">
+                    <select class="admin__control-select"  name="' . $name . '" id="' . $id . '" onchange="document.getElementById(\'pickup_form\').submit();">
+                    ';
+
+    foreach ($data as $index => $value) {
+        echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
+    }
+
+    echo '</select></div></div>';
+}
+
+?>
