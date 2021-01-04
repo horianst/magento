@@ -1,0 +1,129 @@
+<div class="fieldset-wrapper">
+    <div class="fieldset-wrapper-title">
+        <strong class="title">
+            <span>ISTORIC AWB-uri pentru comanda <?php echo $block->getOrderId() ?></span>
+        </strong>
+    </div>
+</div>
+
+<?php
+
+$awbs = $block->getOrder();
+
+
+if ($awbs != null) {
+    if (isset($awbs['error'])) {
+        echo $awbs['error'];
+    } else {
+        if (count($awbs) == 0) {
+            echo 'Nu exista nicio comanda expediata din acest punct de lucru!';
+        } else { ?>
+
+            <div class="admin__data-grid-wrap">
+                <table class="data-grid data-grid-draggable">
+                    <thead>
+                    <tr>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">ID Comanda</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Serie AWB</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Cost livrare</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Nume destinatar</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Localitate destinatar</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Plicuri</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Colete</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Greutare</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Ramburs numerar</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Ramburs cont colector</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Platitor expeditie</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content">Status</span>
+                        </th>
+                        <th class="data-grid-th">
+                            <span class="data-grid-cell-content"></span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <?php
+                    foreach ($awbs as $index => $awb) {
+                        tableRow($index, $awb, $block);
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php
+        }
+    }
+} ?>
+
+
+<?php
+function tableRow($index, $awb, $block)
+{
+    $extraClass = ($index % 2 == 0) ? '' : ' _odd-row';
+
+    echo '<tr class="data-row' . $extraClass . '">';
+
+    echo '<td><div class="data-grid-cell-content">' . $awb->CustomString . '</div></td>';
+    echo '<td><div class="data-grid-cell-content"><a target="_blank" style="text-decoration:none; color:#000;" href="https://www.urgentcargus.ro/Private/Tracking.aspx?CodBara=' . $awb->BarCode . '">' . $awb->BarCode . '</a></div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->ShippingCost->GrandTotal . ' lei</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Recipient->Name . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Recipient->LocalityName . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Envelopes . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Parcels . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->TotalWeight . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->CashRepayment . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->BankRepayment . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . ($awb->ShipmentPayer == 2 ? 'Destinatar' : 'Expeditor') . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Status . '</div></td>';
+
+    $url = $block->getUrl('cargus/history/awb', ['id' => $awb->BarCode]);
+
+    echo '<td><div class="data-grid-cell-content"><a class="action-select" href="' . $url . '">Afiseaza</a></div></td></tr>';
+}
+
+function select($label, $name, $id, $data, $select)
+{
+    echo '<div class="admin__field">
+                <div class="admin__field-label">
+                    <label>
+                    <span>
+                        ' . $label . '
+                    </span>
+                    </label>
+                </div>
+                <div class="admin__field-control">
+                    <select class="admin__control-select"  name="' . $name . '" id="' . $id . '" onchange="document.getElementById(\'pickup_form\').submit();">
+                    ';
+
+    foreach ($data as $index => $value) {
+        echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
+    }
+
+    echo '</select></div></div>';
+}
+
+?>

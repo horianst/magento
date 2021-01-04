@@ -25,18 +25,6 @@ class Preferences extends Template
         $this->data = $data;
     }
 
-
-
-    /**
-     * Get form action URL for POST booking request
-     *
-     * @return string
-     */
-    public function getFormAction()
-    {
-        return '/cargus/preferences/index';
-    }
-
     public function checkCredentials()
     {
         //todo check credentials

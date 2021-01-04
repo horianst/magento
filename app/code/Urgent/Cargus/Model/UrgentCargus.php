@@ -3,8 +3,7 @@
 namespace Urgent\Cargus\Model;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use \Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ObjectManager;
 
 class UrgentCargus
 {
@@ -15,31 +14,43 @@ class UrgentCargus
     private $token;
 
 
-    function __construct() {
+    function __construct()
+    {
         $objectManager = ObjectManager::getInstance();
-        $this->url = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('carriers/urgentcargusshipping/urgent_cargus_api_url');
-        $this->key = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('carriers/urgentcargusshipping/urgent_cargus_api_key');
-        $this->user = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('carriers/urgentcargusshipping/urgent_cargus_username');
-        $this->password = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('carriers/urgentcargusshipping/urgent_cargus_password');
+        $this->url = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue(
+            'carriers/urgentcargusshipping/urgent_cargus_api_url'
+        );
+        $this->key = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue(
+            'carriers/urgentcargusshipping/urgent_cargus_api_key'
+        );
+        $this->user = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue(
+            'carriers/urgentcargusshipping/urgent_cargus_username'
+        );
+        $this->password = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue(
+            'carriers/urgentcargusshipping/urgent_cargus_password'
+        );
 
         $this->token = $this->login();
-
     }
 
     protected function login()
     {
         try {
             $client = new Client();
-            $response = $client->request('POST', $this->url . '/LoginUser', [
-                'headers' => [
-                    'Ocp-Apim-Subscription-Key' => $this->key,
-                    'Content-Type' => 'application/json'
-                ],
-                'json' => [
-                    'UserName' => $this->user,
-                    'Password' =>  $this->password
+            $response = $client->request(
+                'POST',
+                $this->url . '/LoginUser',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Content-Type' => 'application/json'
+                    ],
+                    'json' => [
+                        'UserName' => $this->user,
+                        'Password' => $this->password
+                    ]
                 ]
-            ]);
+            );
 
             return json_decode($response->getBody());
         } catch (\Exception $e) {
@@ -47,41 +58,74 @@ class UrgentCargus
         }
     }
 
-    public function getPickupPoints() {
-        try{
+    public function getPickupPoints()
+    {
+        try {
             $client = new Client();
-            $response = $client->request('GET', $this->url . '/PickupLocations', [
-                'headers' => [
-                    'Ocp-Apim-Subscription-Key' => $this->key,
-                    'Authorization' => 'Bearer ' . $this->token,
-                    'Content-Type' => 'application/json'
+            $response = $client->request(
+                'GET',
+                $this->url . '/PickupLocations',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json'
+                    ]
                 ]
-            ]);
+            );
             return json_decode($response->getBody());
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
 
     public function getOrders($locationId)
     {
-        try{
+        try {
             $client = new Client();
-            $response = $client->request('GET', $this->url . '/Orders', [
-                'headers' => [
-                    'Ocp-Apim-Subscription-Key' => $this->key,
-                    'Authorization' => 'Bearer ' . $this->token,
-                    'Content-Type' => 'application/json'
-                ],
-                'query' => [
-                    'locationId' => $locationId,
-                    'status' =>  1,
-                    'pageNumber' =>  1,
-                    'itemsPerPage' =>  100,
+            $response = $client->request(
+                'GET',
+                $this->url . '/Orders',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json'
+                    ],
+                    'query' => [
+                        'locationId' => $locationId,
+                        'status' => 1,
+                        'pageNumber' => 1,
+                        'itemsPerPage' => 100,
+                    ]
                 ]
-            ]);
+            );
             return json_decode($response->getBody());
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function getOrder($id)
+    {
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'GET',
+                $this->url . '/Awbs',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json'
+                    ],
+                    'query' => [
+                        'orderId' => $id,
+                    ]
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
@@ -91,17 +135,21 @@ class UrgentCargus
      */
     public function execute()
     {
-        try{
+        try {
             $client = new Client();
-            $response = $client->request('GET', $this->url . '/PickupLocations', [
-                'headers' => [
-                    'Ocp-Apim-Subscription-Key' => $this->key,
-                    'Authorization' => 'Bearer ' . $this->token,
-                    'Content-Type' => 'application/json'
+            $response = $client->request(
+                'GET',
+                $this->url . '/PickupLocations',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json'
+                    ]
                 ]
-            ]);
+            );
             return json_decode($response->getBody());
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }

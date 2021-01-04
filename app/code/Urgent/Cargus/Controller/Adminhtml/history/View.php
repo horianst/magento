@@ -11,10 +11,8 @@ use Magento\Framework\View\Result\PageFactory;
 /**
  * Class Index
  */
-class Index extends Action implements HttpGetActionInterface
+class View extends Action implements HttpGetActionInterface
 {
-    const MENU_ID = 'Urgent_Cargus::history';
-
     /**
      * @var PageFactory
      */
@@ -34,16 +32,17 @@ class Index extends Action implements HttpGetActionInterface
     }
 
     /**
-     * Load the page defined in view/adminhtml/layout/cargus_history_index.xml
+     * Load the page defined in view/adminhtml/layout/cargus_history_view.xml
      *
      * @return Page
      */
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->setActiveMenu(static::MENU_ID);
-        $resultPage->getConfig()->getTitle()->prepend(__('Istoric'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Istoric - comanda'));
 
         return $resultPage;
     }
 }
+
+

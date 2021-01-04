@@ -100,7 +100,7 @@ if ($orders != null) {
 
                         <?php
                         foreach ($orders as $index => $order) {
-                            tableRow($index, $order);
+                            tableRow($index, $order, $block);
                         }
                         ?>
                         </tbody>
@@ -118,7 +118,7 @@ if ($orders != null) {
 
 
 <?php
-function tableRow($index, $order)
+function tableRow($index, $order, $block)
 {
     $extraClass = ($index % 2 == 0) ? '' : ' _odd-row';
 
@@ -143,7 +143,10 @@ function tableRow($index, $order)
     echo '<td><div class="data-grid-cell-content">' . $order->TotalWeight . '</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $order->OrdStatus . '</div></td>';
 
-    echo '<td><div class="data-grid-cell-content"> ' . ($order->NoAwb > 0 ? '<a class="action-select" href="/cargus/history/view?id=' . $order->OrderId . '">Afiseaza</a>' : '') . '</div></td></tr>';
+    $url = $block->getUrl('cargus/history/view', ['id' => $order->OrderId] );
+
+
+    echo '<td><div class="data-grid-cell-content"> ' . ($order->NoAwb > 0 ? '<a class="action-select" href="' . $url . '">Afiseaza</a>' : '') . '</div></td></tr>';
 }
 
 function select($label, $name, $id, $data, $select)
