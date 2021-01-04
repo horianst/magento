@@ -1,0 +1,189 @@
+<div class="fieldset-wrapper">
+    <div class="fieldset-wrapper-title">
+        <strong class="title">
+            <span>ISTORIC Detaliu AWB <?php echo $block->getAwbId() ?></span>
+        </strong>
+    </div>
+</div>
+
+<?php
+
+$awb = $block->getAwb();
+
+if ($awb != null) {
+    if (is_array($awb) && isset($awb['error'])) {
+        echo $awb['error'];
+    } else { ?>
+        <div class="admin__data-grid-wrap">
+            <table class="data-grid data-grid-draggable">
+                <thead>
+                <tr>
+                    <th class="data-grid-th" colspan="2">
+                        <span class="data-grid-cell-content">Expeditor</span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><div class="data-grid-cell-content">Nume</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Sender->Name ? $awb->Sender->Name : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Judet</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Sender->CountyName ? $awb->Sender->CountyName : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Localitate</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Sender->LocalityName ? $awb->Sender->LocalityName : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Strada</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Sender->StreetName ? $awb->Sender->StreetName : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Numar</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Sender->BuildingNumber ? $awb->Sender->BuildingNumber : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Adresa</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Sender->AddressText ? $awb->Sender->AddressText : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Persoana contact</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Sender->ContactPerson ? $awb->Sender->ContactPerson : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Telefon</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Sender->PhoneNumber ? $awb->Sender->PhoneNumber : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Email</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Sender->Email ? $awb->Sender->Email : '-'; ?></div></td>
+                </tr>
+                </tbody>
+                <thead>
+                <tr>
+                    <th class="data-grid-th" colspan="2">
+                        <span class="data-grid-cell-content">Destinatar</span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><div class="data-grid-cell-content">Nume</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Recipient->Name ? $awb->Recipient->Name : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Judet</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Recipient->CountyName ? $awb->Recipient->CountyName : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Localitate</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Recipient->LocalityName ? $awb->Recipient->LocalityName : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Strada</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Recipient->StreetName ? $awb->Recipient->StreetName : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Numar</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Recipient->BuildingNumber ? $awb->Recipient->BuildingNumber : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Adresa</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Recipient->AddressText ? $awb->Recipient->AddressText : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Persoana contact</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Recipient->ContactPerson ? $awb->Recipient->ContactPerson : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Telefon</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Recipient->PhoneNumber ? $awb->Recipient->PhoneNumber : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Email</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Recipient->Email ? $awb->Recipient->Email : '-'; ?></div></td>
+                </tr>
+                </tbody>
+                <thead>
+                <tr>
+                    <th class="data-grid-th" colspan="2">
+                        <span class="data-grid-cell-content">Detalii AWB</span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><div class="data-grid-cell-content">Cod bara</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->BarCode ? $awb->BarCode : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Plicuri</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Envelopes ? $awb->Envelopes : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Colete</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Parcels ? $awb->Parcels : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Greutate</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->TotalWeight ? $awb->TotalWeight : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Valoare declarata</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->DeclaredValue ? $awb->DeclaredValue : '0'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Ramburs numerar</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->CashRepayment ? $awb->CashRepayment : '0'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Ramburs cont colector</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->BankRepayment ? $awb->BankRepayment : '0'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Ramburs alt tip</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->OtherRepayment ? $awb->OtherRepayment : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Deschidere colet</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->OpenPackage ? 'Da' : 'Nu'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Livrare sambata</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->SaturdayDelivery ? 'Da' : 'Nu'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Livrare dimineata</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->MorningDelivery ? 'Da' : 'Nu'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Plata expeditie</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->ShipmentPayer == 1 ? 'Expeditor' : ($awb->ShipmentPayer == 2 ? 'Destinatar' : 'Tert'); ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Observatii</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Observations ? $awb->Observations : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Continut</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->PackageContent ? $awb->PackageContent : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Serie client</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->CustomString ? $awb->CustomString : '-'; ?></div></td>
+                </tr>
+                <tr>
+                    <td><div class="data-grid-cell-content">Status</div></td>
+                    <td><div class="data-grid-cell-content"><?php echo $awb->Status ? $awb->Status : '-'; ?></div></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+<?php }} ?>
+
+
+
+
