@@ -7,7 +7,7 @@
     </referenceBlock>
     <body>
         <referenceContainer name="content">
-            <block class="Magento\Backend\Block\Template" template="Urgent_Cargus::order.phtml"/>
+            <block class="Urgent\Cargus\Block\Order" template="Urgent_Cargus::order.phtml"/>
         </referenceContainer>
     </body>
 </page>

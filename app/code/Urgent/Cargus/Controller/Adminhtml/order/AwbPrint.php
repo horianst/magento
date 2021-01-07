@@ -5,6 +5,9 @@ namespace Urgent\Cargus\Controller\Adminhtml\order;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 use Urgent\Cargus\Model\UrgentCargus;
@@ -12,26 +15,27 @@ use Urgent\Cargus\Model\UrgentCargus;
 /**
  * Class Index
  */
-class Index extends Action implements HttpGetActionInterface
+class AwbPrint extends Action implements CsrfAwareActionInterface
 {
-    const MENU_ID = 'Urgent_Cargus::order';
-
-    /**
-     * @var PageFactory
-     */
-    protected $resultPageFactory;
-
     /**
      * Index constructor.
      *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      */
-    public function __construct(Context $context, PageFactory $resultPageFactory)
+    public function __construct(Context $context)
     {
         parent::__construct($context);
+    }
 
-        $this->resultPageFactory = $resultPageFactory;
+    public function createCsrfValidationException(RequestInterface $request): ? InvalidRequestException
+    {
+        return null;
+    }
+
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
     }
 
     /**
@@ -41,18 +45,7 @@ class Index extends Action implements HttpGetActionInterface
      */
     public function execute()
     {
-        $resultPage = $this->resultPageFactory->create();
-        $resultPage->setActiveMenu(static::MENU_ID);
-        $resultPage->getConfig()->getTitle()->prepend(__('Comanda'));
-
-        return $resultPage;
-    }
-
-    public static function getPickupPoints()
-    {
-        $urgentCargus = new UrgentCargus();
-
-        return $urgentCargus->execute();
-
+        echo 'acilea AwbPrint';
+        die();
     }
 }

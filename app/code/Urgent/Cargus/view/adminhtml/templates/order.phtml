@@ -1,50 +1,294 @@
-<?php
-
-use Urgent\Cargus\Controller\Adminhtml\order\Index;
-
-?>
-
-
-
-<div class="content-header">
-    <?php
-    if (isset($_GET['BarCode'])) {
-        echo '<h3>Urgent Cargus - Detaliu AWB '.addslashes($_GET['BarCode']).'</h3>';
-    } elseif (isset($_GET['OrderId'])) {
-        echo '<h3>Urgent Cargus - ISTORIC AWB-uri pentru comanda '.addslashes($_GET['OrderId']).'</h3>';
-    } else {
-        echo '<h3>Urgent Cargus - ISTORIC expeditii pentru punctul de lucru</h3>';
-    }
-    ?>
+<div class="fieldset-wrapper">
+    <div class="fieldset-wrapper-title">
+        <strong class="title">
+            <span>Urgent Cargus - AWB-uri in asteptare</span>
+        </strong>
+    </div>
 </div>
+
+
 <?php
-$listaComenzi = null;
-$listaAwburi = null;
-$detaliuAwb = null;
+$pickupPoints = $block->getPickupPoints();
 
-if (isset($_GET['BarCode'])) {
-//    $BarCode = addslashes($_GET['BarCode']);
-//    $detaliuAwb = Urgent_Cargus_Adminhtml_IndexController::getAwbByBarcode($BarCode);
-//    if (is_array($detaliuAwb) && count($detaliuAwb) == 1) {
-//        $detaliuAwb = $detaliuAwb[0];
-//    }
-} elseif (isset($_GET['OrderId'])) {
-//    $OrderId = addslashes($_GET['OrderId']);
-//    $listaAwburi = Urgent_Cargus_Adminhtml_IndexController::getAwbsByOrderId($OrderId);
+if (is_array($pickupPoints)) {
+    if (count($pickupPoints) > 0 && !isset($pickupPoints['error'])) {
+        $slimPickupPoints = [];
+
+        foreach ($pickupPoints as $pickupPoint) {
+            $slimPickupPoints[$pickupPoint->LocationId] = $pickupPoint->Name;
+        }
+    }
+}
+
+if ($block->getRequest()->getParam('collect_point')) {
+    $originalValue['collect_point'] = $block->getRequest()->getParam('collect_point');
 } else {
-    $pickupPoints = Index::getPickupPoints();
+    $originalValue = $block->getConfigParams();
+}
 
-    echo var_export( $pickupPoints, true);
-//    $go = false;
-//    if (is_array($pickupPoints)) {
-//        if (count($pickupPoints) > 0 && !isset($pickupPoints['error'])) {
-//            $go = true;
-//        }
-//    }
-//    $LocationId = Mage::getStoreConfig('urgentcargus/pickup_id');
-//    if (isset($_GET['LocationId'])) {
-//        $LocationId = addslashes($_GET['LocationId']);
-//    }
-//    $listaComenzi = Urgent_Cargus_Adminhtml_IndexController::getOrderHistory($LocationId);
+$awbs = $block->getWaitningAwbs();
+
+
+if (count($awbs) == 0) {
+    echo 'Nu exista niciun AWB in asteptare!';
+} else { ?>
+    <form id="WaitForm" name="WaitForm" method="post" action="<?php echo $block->getUrl('cargus/order/Wait'); ?>">
+        <input name="form_key" type="hidden" value="<?php echo $block->getFormKey() ?>"/>
+        <div class="admin__data-grid-wrap">
+            <table class="data-grid data-grid-draggable">
+                <thead>
+                <tr>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content"><input type="checkbox" class="checkbox_master" rel="grup1" name="null"/></span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">ID Comanda</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Punct de ridicare</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Nume destinatar</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Localitate destinatar</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Plicuri</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Colete</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Greutare</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Ramburs numerar</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Ramburs cont</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Platitor expeditie</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content"></span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <?php
+                foreach ($awbs as $index => $Awb) {
+                    firstTableRow($index, $Awb, $slimPickupPoints, $originalValue, $block);
+                }
+                ?>
+
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <?php
+
+    button('Valideaza AWB-urile bifate', 'WaitForm.submit()');
+    button('Sterge AWB-urile bifate', 'deleteWait()', 'default');
 }
 ?>
+<form id="pickup_form" method="get">
+    <div class="fieldset-wrapper">
+        <div class="fieldset-wrapper-title">
+            <strong class="title">
+                <span>Urgent Cargus - AWB-uri validate pentru punctul de lucru</span>
+                <?php
+                select(
+                    'collect_point',
+                    'collect_point_id',
+                    $slimPickupPoints,
+                    $originalValue['collect_point'] ?? null
+                );
+                ?>
+            </strong>
+        </div>
+    </div>
+</form>
+
+<?php
+$awbs = $block->getCurrentOrder($originalValue['collect_point']);
+if (count($awbs) == 0) {
+    echo 'Nu exista niciun AWB validat pentru acest punct de lucru!';
+} else { ?>
+    <form id="ValidateForm" name="ValidateForm" method="post" action="<?php
+    echo $block->getUrl('cargus/order/ValidateDelete'); ?>">
+        <input name="form_key" type="hidden" value="<?php echo $block->getFormKey() ?>"/>
+        <div class="admin__data-grid-wrap">
+            <table class="data-grid data-grid-draggable">
+                <thead>
+                <tr>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content"><input type="checkbox" name="null" class="checkbox_master" rel="grup2"/></span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">ID Comanda</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Cod bara AWB</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Cost expeditie</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Nume destinatar</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Localitate destinatar</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Plicuri</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Colete</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Greutare</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Ramburs numerar</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Ramburs cont</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Platitor expeditie</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Status</span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <?php
+                foreach ($awbs as $index => $awb) {
+                    secondTableRow($index, $awb);
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <?php
+    button('Printeaza AWB-urile bifate', 'printValidate()');
+    button('Finalizeaza comanda', 'finalizareComanda()');
+    button('Anuleaza AWB-urile bifate', 'ValidateForm.submit()', 'default');
+}
+
+function button($value, $action, $class = 'basic')
+{
+    echo ' <button type="button" class="custom-button-class action-' . $class . '" onclick="' . $action . '">
+        <span>' . $value . '</span>
+    </button>';
+}
+
+function firstTableRow($index, $awb, $slimPickupPoints, $originalValue, $block)
+{
+    $extraClass = ($index % 2 == 0) ? '' : ' _odd-row';
+
+    echo '<tr class="data-row' . $extraClass . '">';
+    echo '<td><div class="data-grid-cell-content"><input type="checkbox" class="grup1" name="awb[]" value="' . $awb['order_id'] . '"></div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['order_id'] . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $slimPickupPoints[$originalValue['collect_point']] . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['nume_dest'] . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['localitate_dest'] . ($awb['judet_dest'] ? ', ' : '') . $awb['judet_dest'] . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['plicuri'] . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['colete'] . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['kilograme'] . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['ramburs_numerar'] . ' lei</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['ramburs_cont'] . ' lei</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . ($awb['platitor_expeditie'] == 2 ? 'Destinatar' : 'Expeditor') . '</div></td>';
+    echo '<td><div class="data-grid-cell-content"><a class="action-select" href="' . $block->getUrl('cargus/order/edit', ['id' =>  $awb['id']]) . '">Editare</a></div></td></tr>';
+}
+
+function secondTableRow($index, $awb)
+{
+    $extraClass = ($index % 2 == 0) ? '' : ' _odd-row';
+
+    echo '<tr class="data-row' . $extraClass . '">';
+    echo '<td><div class="data-grid-cell-content"><input type="checkbox" class="grup2" name="awb[]" value="' . $awb->BarCode . '"></div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->CustomString . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->BarCode . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->ShippingCost->GrandTotal . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Recipient->Name . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Recipient->LocalityName . ($awb->Recipient->CountyName ? ', ' : '') . $awb->Recipient->CountyName . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Envelopes . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Parcels . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->TotalWeight . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->CashRepayment . ' lei</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->BankRepayment . ' lei</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . ($awb->ShipmentPayer == 2 ? 'Destinatar' : 'Expeditor') . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Status . ' lei</div></td>';
+}
+
+function select($name, $id, $data, $select)
+{
+    echo '<div class="admin__field" style="display: inline-block;">
+                <div class="admin__field-control">
+                    <select class="admin__control-select"  name="' . $name . '" id="' . $id . '" onchange="document.getElementById(\'pickup_form\').submit();">
+                    ';
+
+    foreach ($data as $index => $value) {
+        echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
+    }
+
+    echo '</select></div></div>';
+}
+?>
+
+<script type="text/javascript">
+    require([ 'jquery', 'jquery/ui'], function($){
+        $(".checkbox_master").change(function () {
+            var rel = $(this).attr('rel');
+            $('.' + rel).attr("checked", this.checked);
+        });
+        $(".grup1").change(function () {
+            $('.checkbox_master[rel="grup1"]').attr("checked", $(".grup1:checked").length == $(".grup1").length);
+        });
+        $(".grup2").change(function () {
+            $('.checkbox_master[rel="grup2"]').attr("checked", $(".grup2:checked").length == $(".grup2").length);
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    var WaitForm = new varienForm('WaitForm');
+    var ValidateForm = new varienForm('ValidateForm');
+
+    function deleteWait(){
+        require([ 'jquery', 'jquery/ui'], function($){
+            $('#WaitForm').attr('action', '<?php echo $block->getUrl('cargus/order/WaitDelete'); ?>').submit();
+        });
+    }
+
+    function printValidate() {
+        require([ 'jquery', 'jquery/ui'], function($){
+            var codes = [];
+            $('input.grup2[name*=\'awb\']:checked').each(function () {
+                codes.push($(this).val());
+            });
+            if (codes.length > 0) {
+                var url = "<?php echo $block->getUrl('cargus/order/AwbPrint'); ?>";
+                var stringCodes = "[" + codes.join(",") + "]";
+                window.open(url + "?bar_codes=" + stringCodes, "", "width=900, height=600, left=50, top=50");
+                location.reload();
+            }
+            return false;
+        });
+    }
+
+    function finalizareComanda() {
+        var url = "<?php echo $block->getUrl('cargus/order/SendOrder'); ?>";
+        window.open(url + "?LocationId=<?php echo $originalValue['collect_point']; ?>", "", "width=900, height=380, left=50, top=50");
+        return false;
+    }
+</script>

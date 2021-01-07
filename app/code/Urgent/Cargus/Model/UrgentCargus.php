@@ -13,6 +13,15 @@ class UrgentCargus
     private $password;
     private $token;
 
+    public $version = [
+        'major'     => '1',
+        'minor'     => '9',
+        'revision'  => '4',
+        'patch'     => '5',
+        'stability' => '',
+        'number'    => '',
+    ];
+
 
     function __construct()
     {
@@ -79,7 +88,32 @@ class UrgentCargus
         }
     }
 
-    public function getOrders($locationId)
+
+    public function getAwbs($orderId)
+    {
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'GET',
+                $this->url . '/Awbs',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json'
+                    ],
+                    'query' => [
+                        'orderId' => $orderId,
+                    ]
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function getOrders($locationId, $status = 1, $itemsPerPage = 100)
     {
         try {
             $client = new Client();
@@ -94,9 +128,9 @@ class UrgentCargus
                     ],
                     'query' => [
                         'locationId' => $locationId,
-                        'status' => 1,
+                        'status' => $status,
                         'pageNumber' => 1,
-                        'itemsPerPage' => 100,
+                        'itemsPerPage' => $itemsPerPage,
                     ]
                 ]
             );
@@ -177,79 +211,52 @@ class UrgentCargus
             return $e->getMessage();
         }
     }
+
+    public function validateAwb($fields)
+    {
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'POST',
+                $this->url . '/Awbs',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json',
+                        'path' => 'MG'.$this->version['major'].$this->version['minor'].$this->version['revision']
+                    ],
+                    'json' => $fields
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function deleteAwb($code)
+    {
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'DELETE',
+                $this->url . '/Awbs',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json',
+                        'path' => 'MG'.$this->version['major'].$this->version['minor'].$this->version['revision']
+                    ],
+                    'query' => [
+                        'barCode' => $code,
+                    ]
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
-
-
-//function CallMethod($function, $parameters = '', $verb, $token = null) {
-//    $json = json_encode($parameters);
-//
-//    curl_setopt($this->curl, CURLOPT_POSTFIELDS, $json);
-//    curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, $verb);
-//    curl_setopt($this->curl, CURLOPT_URL, $this->url . '/' . $function);
-//
-//    if ($function == 'LoginUser') {
-//        $headers = array (
-//            'Ocp-Apim-Subscription-Key: '.$this->key,
-//            'Ocp-Apim-Trace: true',
-//            'Content-Type: application/json',
-//            'ContentLength: '.strlen($json)
-//        );
-//    } else {
-//        $headers = array (
-//            'Ocp-Apim-Subscription-Key: '.$this->key,
-//            'Ocp-Apim-Trace: true',
-//            'Authorization: Bearer '.$token,
-//            'Content-Type: application/json',
-//            'Content-Length: '.strlen($json)
-//        );
-//        if ($function == 'Awbs' && $verb == 'POST') {
-//            $ver = Mage::getVersionInfo();
-//            $headers[] = 'path: MG'.$ver['major'].$ver['minor'].$ver['revision'];
-//        }
-//    }
-//
-//    curl_setopt(
-//        $this->curl,
-//        CURLOPT_HTTPHEADER,
-//        $headers
-//    );
-//
-//    $result = curl_exec($this->curl);
-//    $header = curl_getinfo($this->curl);
-//
-//    $data = json_decode($result, true);
-//    $status = $header['http_code'];
-//
-//    if ($status == '200') {
-//        if (is_array($data) && isset($data['message'])) {
-//            return $data['message'];
-//        } else {
-//            return $data;
-//        }
-//    } else if ($status == '204') {
-//        return null;
-//    } else {
-//        @ob_end_clean();
-//        echo '<pre>';
-//        echo 'Status<br/>';
-//        print_r(array(
-//                    'url' => $this->url,
-//                    'status' => $status,
-//                    'method' => $function,
-//                    'verb' => $verb,
-//                    'token' => $token,
-//                    'params' => $parameters,
-//                    'data' => $data
-//                ));
-//        echo 'CURL Error<br/>';
-//        print_r(curl_error($this->curl));
-//        echo '</pre>';
-//        die();
-//    }
-//}
-//}
-//
-//
-//<?php
-//
-//declare(strict_types=1);

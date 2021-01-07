@@ -46,8 +46,6 @@ class AWBExpeditii extends AbstractModel implements AWBExpeditiiInterface, Ident
         return $this->getData(self::ID);
     }
 
-
-
     /**
      * Set ID
      *
