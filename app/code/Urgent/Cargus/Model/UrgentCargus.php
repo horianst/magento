@@ -259,4 +259,53 @@ class UrgentCargus
             return $e->getMessage();
         }
     }
+
+    public function getCounties()
+    {
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'GET',
+                $this->url . '/Counties',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json',
+                    ],
+                    'query' => [
+                        'countryId' => 1,
+                    ]
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function getCities($countyId)
+    {
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'GET',
+                $this->url . '/Localities',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json',
+                    ],
+                    'query' => [
+                        'countryId' => 1,
+                        'countyId' => $countyId,
+                    ]
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }

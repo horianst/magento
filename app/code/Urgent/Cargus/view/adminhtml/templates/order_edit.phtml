@@ -1,0 +1,507 @@
+<script type="text/javascript">
+    var AwbForm = new varienForm('AwbForm');
+
+    function cancelEdit() {
+        window.location = '<?php echo $this->getUrl('cargus/order/index'); ?>';
+    }
+
+    function replace() {
+        require(['jquery', 'jquery/ui'], function ($) {
+            var ajaxRequest;
+
+            var parent = $('#judet_id_id');
+
+            ajaxRequest = $.ajax({
+                url: "<?php echo $this->getUrl('cargus/order/cities'); ?>",
+                type: 'GET',
+                data: {id: parent.val()},
+            });
+
+            ajaxRequest.done(function (response, textStatus, jqXHR) {
+                var element = $('#localitate_id_id');
+
+                if (response == 'null') {
+                    element.replaceWith('<input type="text" name="localitate_id" class="admin__control-text" id="localitate_id_id" value="" />');
+                } else {
+                    element.replaceWith('<select name="localitate_id" class="admin__control-select" id="localitate_id_id">' + response + '</select>');
+                }
+            });
+        });
+    }
+</script>
+
+<?php
+$pickupPoints = $block->getPickupPoints();
+if (is_array($pickupPoints)) {
+    if (count($pickupPoints) > 0 && !isset($pickupPoints['error'])) {
+        $slimPickupPoints = [];
+
+        foreach ($pickupPoints as $pickupPoint) {
+            $slimPickupPoints[$pickupPoint->LocationId] = $pickupPoint->Name;
+        }
+    }
+}
+$slimCounties = [];
+$counties = $block->getCounties();
+
+foreach ($counties as $countie) {
+    $slimCounties[$countie->CountyId] = $countie->Name;
+}
+
+$data = $block->getWaitAwb()[0];
+
+$slimCities = [];
+$cities = $block->getCities($data['judet_id']);
+
+foreach ($cities as $city) {
+    $slimCities[$city->LocalityId] = $city->Name;
+}
+?>
+
+<div class="fieldset-wrapper">
+    <div class="fieldset-wrapper-title">
+        <strong class="title">
+            <span>Editeaza comanda <?php
+                echo $data['order_id']; ?></span>
+        </strong>
+    </div>
+</div>
+
+<form id="AwbForm" name="AwbForm" method="post">
+    <input name="form_key" type="hidden" value="<?php echo $block->getFormKey() ?>"/>
+    <input name="order_id" type="hidden" value="<?php echo $data['order_id'] ?>" />
+    <div class="admin__data-grid-wrap">
+        <table class="data-grid data-grid-draggable">
+            <thead>
+            <tr>
+                <th class="data-grid-th" colspan="2">
+                    <span class="data-grid-cell-content">Expeditor</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Punctul de ridicare</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        select(
+                            'pickup_location_id',
+                            'pickup_location_id_id',
+                            $slimPickupPoints,
+                            $data['pickup_location_id'] ?? null
+                        );
+
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+            <thead>
+            <tr>
+                <th class="data-grid-th" colspan="2">
+                    <span class="data-grid-cell-content">Destinatar</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Nume</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'nume_dest',
+                            'text',
+                            'nume_dest_id',
+                            $data['nume_dest'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Judet</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        select(
+                            'judet_id',
+                            'judet_id_id',
+                            $slimCounties,
+                            $data['judet_id'] ?? null,
+                            true
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Localitate</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        select(
+                            'localitate_id',
+                            'localitate_id_id',
+                            $slimCities,
+                            $data['localitate_id'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Adresa</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'adresa_dest',
+                            'text',
+                            'adresa_dest_id',
+                            $data['adresa_dest'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Persoana contact</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'contact_dest',
+                            'text',
+                            'contact_dest_id',
+                            $data['contact_dest'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Telefon</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'telefon_dest',
+                            'text',
+                            'telefon_dest_id',
+                            $data['telefon_dest'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Email</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'email_dest',
+                            'text',
+                            'email_dest_id',
+                            $data['email_dest'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+            <thead>
+            <tr>
+                <th class="data-grid-th" colspan="2">
+                    <span class="data-grid-cell-content">Detalii AWB</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Plicuri</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'plicuri',
+                            'number',
+                            'plicuri_id',
+                            $data['plicuri'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Colete</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'colete',
+                            'number',
+                            'colete_id',
+                            $data['colete'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Greutate</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'kilograme',
+                            'number',
+                            'kilograme_id',
+                            $data['kilograme'] ?? null,
+                            ' kg'
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Valoare declarata</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'valoare_declarata',
+                            'number',
+                            'valoare_declarata_id',
+                            $data['valoare_declarata'] ?? null,
+                            ' lei'
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Ramburs numerar</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'ramburs_numerar',
+                            'number',
+                            'ramburs_numerar_id',
+                            $data['ramburs_numerar'] ?? null,
+                            ' lei'
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Ramburs cont colector</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'ramburs_cont',
+                            'number',
+                            'ramburs_cont_id',
+                            $data['ramburs_cont'] ?? null,
+                            ' lei'
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Ramburs alt tip</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'ramburs_alt',
+                            'text',
+                            'ramburs_alt_id',
+                            $data['ramburs_alt'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Platitor Expeditie</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        select(
+                            'platitor_expeditie',
+                            'platitor_expeditie',
+                            ['Expeditior', 'Destinatar'],
+                            $data['payer'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Livrare dimineata</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        select(
+                            'livrare_dimineata',
+                            'livrare_dimineata_id',
+                            ['Da', 'Nu'],
+                            $data['livrare_dimineata'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Livrare sambata</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        select(
+                            'livrare_sambata',
+                            'livrare_sambata_id',
+                            ['Da', 'Nu'],
+                            $data['livrare_sambata'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Deschidere colet</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        select(
+                            'deschidere_colet',
+                            'deschidere_colet_id',
+                            ['Da', 'Nu'],
+                            $data['deschidere_colet'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Observatii</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'observatii',
+                            'text',
+                            'observatii_id',
+                            $data['observatii'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Continut</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'continut',
+                            'text',
+                            'continut_id',
+                            $data['continut'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+
+    <?php
+    button('Salveaza modificari comanda ' . $data['order_id'], 'AwbForm.submit()');
+    button('Anuleaza', 'cancelEdit()', 'default');
+
+
+    function button($value, $action, $class = 'basic')
+    {
+        echo ' <button type="button" class="custom-button-class action-' . $class . '" onclick="' . $action . '">
+        <span>' . $value . '</span>
+    </button>';
+    }
+
+    function select($name, $id, $data, $select, $onChange = false)
+    {
+        echo '<div class="admin__field">
+                <div class="admin__field-control">
+                    <select class="admin__control-select"  name="' . $name . '" id="' . $id . '"' . ($onChange ? ' onchange="replace()"' : '') . '>';
+
+        foreach ($data as $index => $value) {
+            echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
+        }
+
+        echo '</select>
+                </div>
+            </div>';
+    }
+
+    function input($name, $type, $id, $data, $sufix = null)
+    {
+        echo '<div class="admin__field">
+                <div class="admin__field-control">
+                    <input class="admin__control-text"  style="width: 90%" type="' . $type . '" name="' . $name . '" id="' . $id . '" value="' . $data . '">';
+        if ($sufix) {
+            echo $sufix;
+        }
+        echo '</div></div>';
+    }
+
+    ?>
