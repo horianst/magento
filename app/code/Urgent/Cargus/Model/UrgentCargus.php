@@ -308,4 +308,30 @@ class UrgentCargus
             return $e->getMessage();
         }
     }
+
+    public function printAwb($barCodes)
+    {
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'GET',
+                $this->url . '/AwbDocuments',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json',
+                    ],
+                    'query' => [
+                        'type' => 'PDF',
+                        'format' => 0,
+                        'barCodes' => $barCodes,
+                    ]
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }

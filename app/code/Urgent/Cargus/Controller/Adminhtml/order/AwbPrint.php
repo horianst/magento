@@ -45,7 +45,17 @@ class AwbPrint extends Action implements CsrfAwareActionInterface
      */
     public function execute()
     {
-        echo 'acilea AwbPrint';
-        die();
+        $barCodes = $this->getRequest()->getParam('bar_codes');
+
+        if ($barCodes) {
+
+            $urgentCargus = new UrgentCargus();
+            $print = $urgentCargus->printAwb($barCodes);
+
+            header('Content-type:application/pdf');
+            echo base64_decode($print);
+            die();
+        }
+        $this->_redirect('*/*/index');
     }
 }
