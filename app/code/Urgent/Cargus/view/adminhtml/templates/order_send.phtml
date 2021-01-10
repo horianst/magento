@@ -1,0 +1,207 @@
+<?php
+
+$date = new DateTime();
+$date->setTimezone(new DateTimeZone('Europe/Bucharest'));
+$today = $date->format('Y-m-d H:i:s');
+if ($block->getRequest()->getParam('date')) {
+    $d = explode('.', $block->getRequest()->getParam('date'));
+    $date->setDate($d[2], $d[1], $d[0]);
+}
+$cd = $date->format('Y-m-d H:i:s');
+
+if (date('w', strtotime($cd)) == 0) { // duminica
+    $date = date('d.m.Y', strtotime($cd.' +1 day'));
+    $h_start = 13;
+    $h_end = 18;
+    $h2_start = 14;
+    $h2_end = 19;
+} else if (date('w', strtotime($cd)) == 1 || date('w', strtotime($cd)) == 2 || date('w', strtotime($cd)) == 3 || date('w', strtotime($cd)) == 4) { // luni, marti, miercuri si joi
+    if ($cd == $today) {
+        if (date('H', strtotime($cd)) > 18) {
+            $date = date('d.m.Y', strtotime($cd.' +1 day'));
+            $h_start = 13;
+            $h_end = 18;
+            $h2_start = 14;
+            $h2_end = 19;
+        } else if (date('H', strtotime($cd)) == 18) {
+            $date = date('d.m.Y', strtotime($cd));
+            $h_start = 18;
+            $h_end = 18;
+            $h2_start = 19;
+            $h2_end = 19;
+        } else {
+            $date = date('d.m.Y', strtotime($cd));
+            $h_start = date('H', strtotime($cd)) + 1;
+            $h_end = 18;
+            $h2_start = date('H', strtotime($cd)) + 2;
+            $h2_end = 19;
+        }
+    } else {
+        $date = date('d.m.Y', strtotime($cd));
+        $h_start = 13;
+        $h_end = 18;
+        $h2_start = 14;
+        $h2_end = 19;
+    }
+} else if (date('w', strtotime($cd)) == 5) { // vineri
+    if ($cd == $today) {
+        if (date('H', strtotime($cd)) > 18) {
+            $date = date('d.m.Y', strtotime($cd.' +1 day'));
+            $h_start = 13;
+            $h_end = 14;
+            $h2_start = 14;
+            $h2_end = 15;
+        } else if (date('H', strtotime($cd)) == 18) {
+            $date = date('d.m.Y', strtotime($cd));
+            $h_start = 18;
+            $h_end = 18;
+            $h2_start = 19;
+            $h2_end = 19;
+        } else {
+            $date = date('d.m.Y', strtotime($cd));
+            $h_start = date('H', strtotime($cd)) + 1;
+            $h_end = 18;
+            $h2_start = date('H', strtotime($cd)) + 2;
+            $h2_end = 19;
+        }
+    } else {
+        $date = date('d.m.Y', strtotime($cd));
+        $h_start = 13;
+        $h_end = 18;
+        $h2_start = 14;
+        $h2_end = 19;
+    }
+} else if (date('w', strtotime($cd)) == 6) { // sambata
+    if ($cd == $today) {
+        if (date('H', strtotime($cd)) > 14) {
+            $date = date('d.m.Y', strtotime($cd.' +2 day'));
+            $h_start = 13;
+            $h_end = 18;
+            $h2_start = 14;
+            $h2_end = 19;
+        } else if (date('H', strtotime($cd)) == 14) {
+            $date = date('d.m.Y', strtotime($cd));
+            $h_start = 14;
+            $h_end = 14;
+            $h2_start = 15;
+            $h2_end = 15;
+        } else {
+            $date = date('d.m.Y', strtotime($cd));
+            $h_start = date('H', strtotime($cd)) + 1;
+            $h_end = 14;
+            $h2_start = date('H', strtotime($cd)) + 2;
+            $h2_end = 15;
+        }
+    } else {
+        $date = date('d.m.Y', strtotime($cd));
+        $h_start = 13;
+        $h_end = 14;
+        $h2_start = 14;
+        $h2_end = 15;
+    }
+}
+
+if ($block->getRequest()->getParam('hour')) {
+    $h = explode(':', $block->getRequest()->getParam('hour'));
+    $h2_start = $h[0] + 1;
+    $hour = $block->getRequest()->getParam('hour');
+} else {
+    $hour = false;
+}
+
+$hourFrom = '';
+for ($i = $h_start; $i <= $h_end; $i++) {
+    $hourFrom .= '<option'.($hour == $i.':00' ? ' selected="selected"' : '').'>'.$i.':00</option>';
+}
+
+$hourTo = '';
+for ($i = $h2_start; $i <= $h2_end; $i++) {
+    $hourTo .= '<option>'.$i.':00</option>';
+}
+?>
+
+    <div class="fieldset-wrapper">
+        <div class="fieldset-wrapper-title">
+            <strong class="title">
+                <span>Finalizeaza comanda</span>
+            </strong>
+        </div>
+    </div>
+
+    <h4>Va rugam sa alegeti intervalul de ridicare pentru comanda curenta</h4>
+
+    <div class="entry-edit">
+        <form id="sendForm" name="sendForm" method="post" action="<?php echo $this->getUrl('cargus/order/send'); ?>">
+            <input name="form_key" type="hidden" value="<?php echo $block->getFormKey() ?>"/>
+            <input name="id" type="hidden" value="<?php echo $block->getRequest()->getParam('id'); ?>" />
+            <input name="submited" type="hidden" value="true" />
+
+            <?php
+            input('date', 'text', 'date_id', $date);
+            select('hour_from', 'hour_from_id', $hourFrom);
+            select('hour_to', 'hour_to_id', $hourTo);
+            ?>
+
+            <?php
+            button('Trimite comanda curenta', 'sendForm.submit()');
+            ?>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        require([ 'jquery', 'jquery/ui'], function($){
+
+            var tallySheet = <?php echo $block->getData('tallySheet') ?>;
+
+            if(tallySheet){
+                var url = "<?php echo $block->getUrl('cargus/order/SheetPrint'); ?>";
+                window.open(url + "?id=<?php echo $block->getData('orderId') ?>", "", "width=900, height=600, left=50, top=50");
+                window.location = url;
+            }
+
+            $('#date_id').datepicker({
+                minDate: 0,
+                firstDay: 1,
+                dateFormat: 'dd.mm.yy',
+                beforeShowDay: function(date) {
+                    var day = date.getDay();
+                    return [(day != 0), ''];
+                }
+            });
+
+            $('#date_id').change(function () {
+                window.location = "?id=<?php echo $block->getRequest()->getParam('id'); ?>&date=" + $(this).val();
+            });
+
+            $('select[name="hour_from"]').change(function () {
+                window.location = "?id=<?php echo $block->getRequest()->getParam('id'); ?>&date=" + $('#date_id').val() + "&hour=" + $(this).val();
+            });
+
+        });
+        var sendForm = new varienForm('sendForm');
+    </script>
+
+<?php
+function button($value, $action, $class = 'basic')
+{
+    echo ' <button type="button" class="custom-button-class action-' . $class . '" onclick="' . $action . '">
+        <span>' . $value . '</span>
+    </button>';
+}
+
+function select($name, $id, $data)
+{
+    echo '<div class="admin__field" style="display: inline-block; padding-right: 10px;">
+                <div class="admin__field-control">
+                    <select class="admin__control-select"  name="' . $name . '" id="' . $id . '">';
+    echo $data;
+    echo '</select></div></div>';
+}
+
+function input($name, $type, $id, $data)
+{
+    echo '<div class="admin__field" style="display: inline-block; padding-right: 10px;">
+                <div class="admin__field-control">
+                    <input class="admin__control-text" type="' . $type . '" name="' . $name . '" id="' . $id . '" value="' . $data . '">';
+    echo '</div></div>';
+}

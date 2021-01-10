@@ -15,17 +15,24 @@ use Urgent\Cargus\Model\UrgentCargus;
 /**
  * Class Index
  */
-class AwbPrint extends Action implements CsrfAwareActionInterface
+class Send extends Action implements CsrfAwareActionInterface
 {
+    /**
+     * @var PageFactory
+     */
+    protected $resultPageFactory;
+
     /**
      * Index constructor.
      *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      */
-    public function __construct(Context $context)
+    public function __construct(Context $context, PageFactory $resultPageFactory)
     {
         parent::__construct($context);
+
+        $this->resultPageFactory = $resultPageFactory;
     }
 
     public function createCsrfValidationException(RequestInterface $request): ? InvalidRequestException
@@ -45,17 +52,24 @@ class AwbPrint extends Action implements CsrfAwareActionInterface
      */
     public function execute()
     {
-        $barCodes = $this->getRequest()->getParam('bar_codes');
+        $resultPage = $this->resultPageFactory->create();
 
-        if ($barCodes) {
+        if($this->getRequest()->getParam('submited')){
+            $post = $this->getRequest()->getPostValue();
+
+            $date = explode('.', $post['date']);
+            $from = $date[2].'-'.$date[1].'-'.$date[0].' '.$post['hour_from'].':00';
+            $to = $date[2].'-'.$date[1].'-'.$date[0].' '.$post['hour_to'].':00';
 
             $urgentCargus = new UrgentCargus();
-            $print = $urgentCargus->printAwb($barCodes);
+            $orderId = $urgentCargus->sendOrder($post['id'], $from, $to);
 
-            header('Content-type:application/pdf');
-            echo base64_decode($print);
-            die();
+            $block = $resultPage->getLayout()->getBlock('urgent.cargus.order.send');
+            $block->setData('tallySheet', true);
+            $block->setData('orderId', $orderId);
         }
-        $this->_redirect('cargus/order/index');
+
+        $resultPage->getConfig()->getTitle()->prepend(__('Confirma comanda'));
+        return $resultPage;
     }
 }

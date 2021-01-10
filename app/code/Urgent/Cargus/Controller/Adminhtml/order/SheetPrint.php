@@ -15,7 +15,7 @@ use Urgent\Cargus\Model\UrgentCargus;
 /**
  * Class Index
  */
-class SendOrder extends Action implements CsrfAwareActionInterface
+class SheetPrint extends Action implements CsrfAwareActionInterface
 {
     /**
      * Index constructor.
@@ -45,7 +45,17 @@ class SendOrder extends Action implements CsrfAwareActionInterface
      */
     public function execute()
     {
-        echo 'acilea SendOrder';
-        die();
+        $id = $this->getRequest()->getParam('id');
+
+        if ($id) {
+
+            $urgentCargus = new UrgentCargus();
+            $print = $urgentCargus->printSheet($id);
+
+            header('Content-type:application/pdf');
+            echo base64_decode($print);
+            die();
+        }
+        $this->_redirect('cargus/order/index');
     }
 }

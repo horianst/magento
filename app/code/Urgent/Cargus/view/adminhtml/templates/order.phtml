@@ -227,7 +227,7 @@ function secondTableRow($index, $awb)
     echo '<td><div class="data-grid-cell-content">' . $awb->CashRepayment . ' lei</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb->BankRepayment . ' lei</div></td>';
     echo '<td><div class="data-grid-cell-content">' . ($awb->ShipmentPayer == 2 ? 'Destinatar' : 'Expeditor') . '</div></td>';
-    echo '<td><div class="data-grid-cell-content">' . $awb->Status . ' lei</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb->Status . '</div></td>';
 }
 
 function select($name, $id, $data, $select)
@@ -287,8 +287,8 @@ function select($name, $id, $data, $select)
     }
 
     function finalizareComanda() {
-        var url = "<?php echo $block->getUrl('cargus/order/SendOrder'); ?>";
-        window.open(url + "?LocationId=<?php echo $originalValue['collect_point']; ?>", "", "width=900, height=380, left=50, top=50");
+        var url = "<?php echo $block->getUrl('cargus/order/Send'); ?>";
+        window.location = '<?php echo $this->getUrl('cargus/order/send', ['id' => $originalValue['collect_point']]); ?>';
         return false;
     }
 </script>

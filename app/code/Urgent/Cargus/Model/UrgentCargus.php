@@ -2,6 +2,7 @@
 
 namespace Urgent\Cargus\Model;
 
+use Elasticsearch\Common\Exceptions\ClientErrorResponseException;
 use GuzzleHttp\Client;
 use Magento\Framework\App\ObjectManager;
 
@@ -327,6 +328,61 @@ class UrgentCargus
                         'format' => 0,
                         'barCodes' => $barCodes,
                     ]
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function printSheet($orderId)
+    {
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'GET',
+                $this->url . '/OrderDocuments',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json',
+                    ],
+                    'query' => [
+                        'orderId' => $orderId,
+                        'docType' => 0,
+                    ]
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+
+    public function sendOrder($locationId, $from, $to)
+    {
+        try {
+            $query = [
+                'locationId' => $locationId,
+                'PickupStartDate' => date('Y-m-d H:i:s', strtotime($from)),
+                'PickupEndDate' => date('Y-m-d H:i:s', strtotime($to)),
+                'action' => 1,
+            ];
+
+            $client = new Client();
+            $response = $client->request(
+                'PUT',
+                $this->url . '/Orders',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json',
+                    ],
+                    'query' => $query
                 ]
             );
             return json_decode($response->getBody());
