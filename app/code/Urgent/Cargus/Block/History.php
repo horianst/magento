@@ -10,12 +10,15 @@ use Urgent\Cargus\Model\UrgentCargus;
 
 class History extends Template
 {
-    private FormKey $formKey;
     /**
      * @var ScopeConfigInterface
      */
-    private ScopeConfigInterface $scopeConfig;
-    private array $data;
+    private $scopeConfig;
+    private $data;
+    /**
+     * @var FormKey
+     */
+    private $formKey;
 
     public function __construct(Context $context, FormKey $formKey, ScopeConfigInterface $scopeConfig, array $data = [])
     {

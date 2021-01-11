@@ -10,12 +10,12 @@ use Urgent\Cargus\Model\UrgentCargus;
 
 class Preferences extends Template
 {
-    private FormKey $formKey;
+    private $formKey;
     /**
      * @var ScopeConfigInterface
      */
-    private ScopeConfigInterface $scopeConfig;
-    private array $data;
+    private $scopeConfig;
+    private $data;
 
     public function __construct(Context $context, FormKey $formKey, ScopeConfigInterface $scopeConfig, array $data = [])
     {

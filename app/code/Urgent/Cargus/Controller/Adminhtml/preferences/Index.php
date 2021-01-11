@@ -24,7 +24,7 @@ class Index extends Action implements CsrfAwareActionInterface
     /**
      * @var PageFactory
      */
-    protected PageFactory $resultPageFactory;
+    protected $resultPageFactory;
 
     /**
      * @var WriterInterface
@@ -34,7 +34,7 @@ class Index extends Action implements CsrfAwareActionInterface
      * @var ScopeConfigInterface
      */
     private  $scopeConfig;
-    private Manager $cacheManager;
+    private $cacheManager;
 
     /**
      * Index constructor.

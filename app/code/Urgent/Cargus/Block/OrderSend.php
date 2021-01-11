@@ -11,16 +11,16 @@ use Urgent\Cargus\Model\UrgentCargus;
 
 class OrderSend extends Template
 {
-    private FormKey $formKey;
+    private $formKey;
     /**
      * @var ScopeConfigInterface
      */
-    private ScopeConfigInterface $scopeConfig;
-    private array $data;
+    private $scopeConfig;
+    private $data;
     /**
      * @var ResourceConnection
      */
-    private ResourceConnection $_resource;
+    private $_resource;
 
     public function __construct(Context $context, FormKey $formKey, ScopeConfigInterface $scopeConfig, ResourceConnection $resource, array $data = [])
     {

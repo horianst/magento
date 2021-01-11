@@ -156,7 +156,6 @@ for ($i = $h2_start; $i <= $h2_end; $i++) {
             if(tallySheet){
                 var url = "<?php echo $block->getUrl('cargus/order/SheetPrint'); ?>";
                 window.open(url + "?id=<?php echo $block->getData('orderId') ?>", "", "width=900, height=600, left=50, top=50");
-                window.location = url;
             }
 
             $('#date_id').datepicker({

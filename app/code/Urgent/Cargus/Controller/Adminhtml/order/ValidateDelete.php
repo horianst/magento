@@ -22,7 +22,7 @@ class ValidateDelete extends Action implements CsrfAwareActionInterface
     /**
      * @var ResourceConnection
      */
-    private ResourceConnection $_resource;
+    private $_resource;
 
     /**
      * Index constructor.
