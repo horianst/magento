@@ -4,7 +4,6 @@ namespace Urgent\Cargus\Controller\Adminhtml\order;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
@@ -13,7 +12,7 @@ use Magento\Framework\View\Result\PageFactory;
 use Urgent\Cargus\Model\UrgentCargus;
 
 /**
- * Class Index
+ * Class Send
  */
 class Send extends Action implements CsrfAwareActionInterface
 {
@@ -23,7 +22,7 @@ class Send extends Action implements CsrfAwareActionInterface
     protected $resultPageFactory;
 
     /**
-     * Index constructor.
+     * Send constructor.
      *
      * @param Context $context
      * @param PageFactory $resultPageFactory
@@ -35,7 +34,7 @@ class Send extends Action implements CsrfAwareActionInterface
         $this->resultPageFactory = $resultPageFactory;
     }
 
-    public function createCsrfValidationException(RequestInterface $request): ? InvalidRequestException
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
@@ -46,20 +45,18 @@ class Send extends Action implements CsrfAwareActionInterface
     }
 
     /**
-     * Load the page defined in view/adminhtml/layout/order_index.xml
-     *
      * @return Page
      */
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
 
-        if($this->getRequest()->getParam('submited')){
+        if ($this->getRequest()->getParam('submited')) {
             $post = $this->getRequest()->getPostValue();
 
             $date = explode('.', $post['date']);
-            $from = $date[2].'-'.$date[1].'-'.$date[0].' '.$post['hour_from'].':00';
-            $to = $date[2].'-'.$date[1].'-'.$date[0].' '.$post['hour_to'].':00';
+            $from = $date[2] . '-' . $date[1] . '-' . $date[0] . ' ' . $post['hour_from'] . ':00';
+            $to = $date[2] . '-' . $date[1] . '-' . $date[0] . ' ' . $post['hour_to'] . ':00';
 
             $urgentCargus = new UrgentCargus();
             $orderId = $urgentCargus->sendOrder($post['id'], $from, $to);

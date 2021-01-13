@@ -34,9 +34,13 @@ class Index extends Action implements HttpGetActionInterface
         $this->resultPageFactory = $resultPageFactory;
     }
 
+    public static function getPickupPoints()
+    {
+        $urgentCargus = new UrgentCargus();
+        return $urgentCargus->execute();
+    }
+
     /**
-     * Load the page defined in view/adminhtml/layout/order_index.xml
-     *
      * @return Page
      */
     public function execute()
@@ -46,11 +50,5 @@ class Index extends Action implements HttpGetActionInterface
         $resultPage->getConfig()->getTitle()->prepend(__('Comanda'));
 
         return $resultPage;
-    }
-
-    public static function getPickupPoints()
-    {
-        $urgentCargus = new UrgentCargus();
-        return $urgentCargus->execute();
     }
 }

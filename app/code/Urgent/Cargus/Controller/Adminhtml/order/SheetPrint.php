@@ -13,12 +13,12 @@ use Magento\Framework\View\Result\PageFactory;
 use Urgent\Cargus\Model\UrgentCargus;
 
 /**
- * Class Index
+ * Class SheetPrint
  */
 class SheetPrint extends Action implements CsrfAwareActionInterface
 {
     /**
-     * Index constructor.
+     * SheetPrint constructor.
      *
      * @param Context $context
      * @param PageFactory $resultPageFactory
@@ -39,8 +39,6 @@ class SheetPrint extends Action implements CsrfAwareActionInterface
     }
 
     /**
-     * Load the page defined in view/adminhtml/layout/order_index.xml
-     *
      * @return Page
      */
     public function execute()

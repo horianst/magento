@@ -11,19 +11,30 @@ use Urgent\Cargus\Model\UrgentCargus;
 
 class Order extends Template
 {
+    /**
+     * @var FormKey
+     */
     private $formKey;
     /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
+    /**
+     * @var array
+     */
     private $data;
     /**
      * @var ResourceConnection
      */
     private $_resource;
 
-    public function __construct(Context $context, FormKey $formKey, ScopeConfigInterface $scopeConfig, ResourceConnection $resource, array $data = [])
-    {
+    public function __construct(
+        Context $context,
+        FormKey $formKey,
+        ScopeConfigInterface $scopeConfig,
+        ResourceConnection $resource,
+        array $data = []
+    ) {
         parent::__construct($context, $data);
         $this->formKey = $formKey;
         $this->scopeConfig = $scopeConfig;
@@ -36,12 +47,12 @@ class Order extends Template
         $connection = $this->_resource->getConnection(ResourceConnection::DEFAULT_CONNECTION);
 
         $awbExpeditii = $connection->getTableName('awb_expeditii');
-        return $connection->fetchAll('SELECT * FROM `'.$awbExpeditii.'`  WHERE status = 0 ORDER BY timestamp DESC');
+        return $connection->fetchAll('SELECT * FROM `' . $awbExpeditii . '`  WHERE status = 0 ORDER BY timestamp DESC');
     }
 
     public function getConfigParams()
     {
-        if(empty($this->getRequest()->getPostValue())){
+        if (empty($this->getRequest()->getPostValue())) {
             return unserialize($this->scopeConfig->getValue('urgent/cargus/preferences'));
         } else {
             return $this->getRequest()->getPostValue();
@@ -57,7 +68,7 @@ class Order extends Template
     public function getCurrentOrder($locationId)
     {
         $urgentCargus = new UrgentCargus();
-        $order =  $urgentCargus->getOrders($locationId, 0, 1);
+        $order = $urgentCargus->getOrders($locationId, 0, 1);
 
         $awbList = [];
         if (!is_null($order)) {

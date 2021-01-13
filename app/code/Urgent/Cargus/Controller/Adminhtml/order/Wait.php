@@ -12,7 +12,7 @@ use Magento\Framework\View\Result\Page;
 use Urgent\Cargus\Model\UrgentCargus;
 
 /**
- * Class Index
+ * Class Wait
  */
 class Wait extends Action implements CsrfAwareActionInterface
 {
@@ -23,7 +23,7 @@ class Wait extends Action implements CsrfAwareActionInterface
     private $_resource;
 
     /**
-     * Index constructor.
+     * Wait constructor.
      *
      * @param Context $context
      * @param ResourceConnection $resource
@@ -34,7 +34,7 @@ class Wait extends Action implements CsrfAwareActionInterface
         $this->_resource = $resource;
     }
 
-    public function createCsrfValidationException(RequestInterface $request): ? InvalidRequestException
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
@@ -53,10 +53,15 @@ class Wait extends Action implements CsrfAwareActionInterface
     {
         $awbs = $this->getRequest()->getParam('awb');
 
-        if($awbs){
+        if ($awbs) {
             $connection = $this->_resource->getConnection(ResourceConnection::DEFAULT_CONNECTION);
 
-            $data = $connection->fetchAll('SELECT * FROM awb_expeditii WHERE status = 0 AND order_id IN(' . implode(', ', $awbs) . ') ORDER BY timestamp DESC');
+            $data = $connection->fetchAll(
+                'SELECT * FROM awb_expeditii WHERE status = 0 AND order_id IN(' . implode(
+                    ', ',
+                    $awbs
+                ) . ') ORDER BY timestamp DESC'
+            );
 
             $errors = [];
             $done = 0;
@@ -102,23 +107,37 @@ class Wait extends Action implements CsrfAwareActionInterface
 
                 if (is_array($codBara)) {
                     if (isset($codBara['error'])) {
-                        $errors[] = $item['order_id'].': '.$codBara;
+                        $errors[] = $item['order_id'] . ': ' . $codBara;
                     }
-                } else if ($codBara != '') {
-                    $query = "UPDATE `awb_expeditii` SET `cod_bara` = '".$codBara."', `status` = '1' WHERE `order_id` = '".$item['order_id']."'";
-                    $connection->query($query);
-                    ++$done;
                 } else {
-                    $errors[] = 'Unknown error!';
+                    if ($codBara != '') {
+                        $query = "UPDATE `awb_expeditii` SET `cod_bara` = '" . $codBara . "', `status` = '1' WHERE `order_id` = '" . $item['order_id'] . "'";
+                        $connection->query($query);
+                        ++$done;
+                    } else {
+                        $errors[] = 'Unknown error!';
+                    }
                 }
             }
 
             if (count($data) == $done) {
                 $this->messageManager->addNoticeMessage(__('Toate AWB-urile bifate au fost validate!'));
             } elseif (count($data) == count($errors)) {
-                $this->messageManager->addErrorMessage((__('Niciun AWB bifat nu a putut fi validat! '.implode(', ', $errors))));
+                $this->messageManager->addErrorMessage(
+                    (__('Niciun AWB bifat nu a putut fi validat! ' . implode(', ', $errors)))
+                );
             } else {
-                $this->messageManager->addErrorMessage((__(count($errors).' '.(count($errors) == 1 ? 'AWB' : 'AWB-uri').' '.(count($data) > 1 ? 'din cele '.count($data).' bifate' : '').' nu '.(count($errors) == 1 ? 'a' : 'au').' putut fi '.(count($errors) == 1 ? 'validat' : 'validate').'! '.implode(', ', $errors))));
+                $this->messageManager->addErrorMessage(
+                    (__(
+                        count($errors) . ' ' . (count($errors) == 1 ? 'AWB' : 'AWB-uri') . ' ' . (count(
+                            $data
+                        ) > 1 ? 'din cele ' . count($data) . ' bifate' : '') . ' nu ' . (count(
+                            $errors
+                        ) == 1 ? 'a' : 'au') . ' putut fi ' . (count(
+                            $errors
+                        ) == 1 ? 'validat' : 'validate') . '! ' . implode(', ', $errors)
+                    ))
+                );
             }
         }
 

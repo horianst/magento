@@ -4,7 +4,6 @@ namespace Urgent\Cargus\Controller\Adminhtml\order;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
@@ -13,7 +12,7 @@ use Magento\Framework\View\Result\PageFactory;
 use Urgent\Cargus\Model\UrgentCargus;
 
 /**
- * Class Index
+ * Class Cities
  */
 class Cities extends Action implements CsrfAwareActionInterface
 {
@@ -23,7 +22,7 @@ class Cities extends Action implements CsrfAwareActionInterface
     protected $resultPageFactory;
 
     /**
-     * Index constructor.
+     * Cities constructor.
      *
      * @param Context $context
      * @param PageFactory $resultPageFactory
@@ -31,11 +30,10 @@ class Cities extends Action implements CsrfAwareActionInterface
     public function __construct(Context $context, PageFactory $resultPageFactory)
     {
         parent::__construct($context);
-
         $this->resultPageFactory = $resultPageFactory;
     }
 
-    public function createCsrfValidationException(RequestInterface $request): ? InvalidRequestException
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
@@ -46,8 +44,6 @@ class Cities extends Action implements CsrfAwareActionInterface
     }
 
     /**
-     * Load the page defined in view/adminhtml/layout/order_index.xml
-     *
      * @return Page
      */
     public function execute()
@@ -63,12 +59,11 @@ class Cities extends Action implements CsrfAwareActionInterface
             $counties[$county->Abbreviation] = $county->CountyId;
         }
 
-
         $cities = $urgentCargus->getCities($counties[$countyCode]);
 
         $response = '';
 
-        foreach ($cities as $city){
+        foreach ($cities as $city) {
             $response = $response . '<option km="' . $city->ExtraKm . '">' . $city->Name . "</option>\n";
         }
 

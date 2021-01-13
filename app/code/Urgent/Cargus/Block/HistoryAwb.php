@@ -18,7 +18,6 @@ class HistoryAwb extends Template
         $this->request = $request;
     }
 
-
     public function getAwb()
     {
         $id = $this->request->getParam('id');

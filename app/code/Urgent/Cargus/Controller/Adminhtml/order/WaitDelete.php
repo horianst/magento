@@ -20,7 +20,7 @@ class WaitDelete extends Action implements CsrfAwareActionInterface
     private $_resource;
 
     /**
-     * Index constructor.
+     * WaitDelete constructor.
      *
      * @param Context $context
      * @param ResourceConnection $resource

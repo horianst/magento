@@ -14,7 +14,7 @@ use Magento\Framework\View\Result\PageFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Class Index
+ * Class AddOrder
  */
 class AddOrder extends Action implements CsrfAwareActionInterface
 {
@@ -22,7 +22,6 @@ class AddOrder extends Action implements CsrfAwareActionInterface
      * @var PageFactory
      */
     protected $resultPageFactory;
-
     /**
      * @var ResourceConnection
      */
@@ -37,7 +36,7 @@ class AddOrder extends Action implements CsrfAwareActionInterface
     private $scopeConfig;
 
     /**
-     * Index constructor.
+     * AddOrder constructor.
      *
      * @param Context $context
      * @param PageFactory $resultPageFactory
@@ -45,8 +44,13 @@ class AddOrder extends Action implements CsrfAwareActionInterface
      * @param StoreManagerInterface $storeManager
      * @param ScopeConfigInterface $scopeConfig
      */
-    public function __construct(Context $context, PageFactory $resultPageFactory, ResourceConnection $resource, StoreManagerInterface $storeManager, ScopeConfigInterface $scopeConfig)
-    {
+    public function __construct(
+        Context $context,
+        PageFactory $resultPageFactory,
+        ResourceConnection $resource,
+        StoreManagerInterface $storeManager,
+        ScopeConfigInterface $scopeConfig
+    ) {
         parent::__construct($context);
 
         $this->resultPageFactory = $resultPageFactory;
@@ -55,7 +59,7 @@ class AddOrder extends Action implements CsrfAwareActionInterface
         $this->scopeConfig = $scopeConfig;
     }
 
-    public function createCsrfValidationException(RequestInterface $request): ? InvalidRequestException
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
@@ -67,6 +71,7 @@ class AddOrder extends Action implements CsrfAwareActionInterface
 
     /**
      * @return Page
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute()
     {
@@ -75,9 +80,9 @@ class AddOrder extends Action implements CsrfAwareActionInterface
 
         $connection = $this->_resource->getConnection(ResourceConnection::DEFAULT_CONNECTION);
 
-        $existing = $connection->fetchAll("SELECT `id` FROM `awb_expeditii` WHERE `order_id`='".$orderName."'");
+        $existing = $connection->fetchAll("SELECT `id` FROM `awb_expeditii` WHERE `order_id`='" . $orderName . "'");
 
-        if ($existing){
+        if ($existing) {
             echo 'old';
             die();
         }
@@ -123,19 +128,26 @@ class AddOrder extends Action implements CsrfAwareActionInterface
             $defaultCurrency = $this->_storeManager->getStore()->getCurrentCurrencyCode();
             $allowedCurrencies = $this->_storeManager->getStore()->getAllowedCurrencies();
 
-            $rates = $this->_storeManager->getStore()->getBaseCurrency()->getCurrencyRates($defaultCurrency, array_values($allowedCurrencies));
+            $rates = $this->_storeManager->getStore()->getBaseCurrency()->getCurrencyRates(
+                $defaultCurrency,
+                array_values(
+                    $allowedCurrencies
+                )
+            );
             $base2ron = $rates['RON'] / $rates[$baseCode];
         }
 
         $preferences = unserialize($this->scopeConfig->getValue('urgent/cargus/preferences'));
-
 
         if ($preferences['payer'] != 1 || ($preferences['fixed_cost_transport'] || $preferences['fixed_cost_transport'] == '0')) {
             $payer = 1;
             $valoareRamburs = round($data['grand_total'] * $base2ron, 2);
         } else {
             $payer = 2;
-            $valoareRamburs = round(($data['grand_total'] - $data['shipping_amount'] - $data['shipping_tax_amount']) * $base2ron, 2);
+            $valoareRamburs = round(
+                ($data['grand_total'] - $data['shipping_amount'] - $data['shipping_tax_amount']) * $base2ron,
+                2
+            );
         }
 
         if ($data['shipping_amount'] == 0) {
@@ -161,7 +173,7 @@ class AddOrder extends Action implements CsrfAwareActionInterface
             $BankRepayment = 0;
         }
 
-        $query = "SELECT * FROM directory_country_region WHERE `country_id` = 'RO' AND `region_id` = '".$data['region_id']."'";
+        $query = "SELECT * FROM directory_country_region WHERE `country_id` = 'RO' AND `region_id` = '" . $data['region_id'] . "'";
         $judetResult = $connection->fetchAll($query);
 
         $weight = ($data['weight'] < 1 ? 1 : ceil($data['weight']));
@@ -199,33 +211,37 @@ class AddOrder extends Action implements CsrfAwareActionInterface
                             `continut`,
                             `status`
                         ) VALUES (
-                            '".$this->clear($orderName)."',
-                            '".$preferences['collect_point']."',
+                            '" . $this->clear($orderName) . "',
+                            '" . $preferences['collect_point'] . "',
                             '',
-                            '".($this->clear($data['company']) ? $this->clear($data['company']) : $this->clear($data['firstname']).' '.$this->clear($data['lastname']))."',
-                            '".$this->clear($judetResult[0]['code'])."',
-                            '".$this->clear($data['city'])."',
-                            '".$this->clear($data['street'])."',
-                            '".$this->clear($data['firstname']).' '.$this->clear($data['lastname'])."',
-                            '".$this->clear($data['telephone'])."',
-                            '".$this->clear($data['email'])."',
-                            '".$no_envelopes."',
-                            '".$no_parcels."',
-                            '".$weight."',
-                            '".$DeclaredValue."',
-                            '".$CashRepayment."',
-                            '".$BankRepayment."',
-                            '".$payer."',
-                            '".$preferences['saturday_delivery']."',
-                            '".$preferences['morning_delivery']."',
-                            '".$preferences['open_package']."',
+                            '" . ($this->clear($data['company']) ? $this->clear($data['company']) : $this->clear(
+                    $data['firstname']
+                ) . ' ' . $this->clear($data['lastname'])) . "',
+                            '" . $this->clear($judetResult[0]['code']) . "',
+                            '" . $this->clear($data['city']) . "',
+                            '" . $this->clear($data['street']) . "',
+                            '" . $this->clear($data['firstname']) . ' ' . $this->clear($data['lastname']) . "',
+                            '" . $this->clear($data['telephone']) . "',
+                            '" . $this->clear($data['email']) . "',
+                            '" . $no_envelopes . "',
+                            '" . $no_parcels . "',
+                            '" . $weight . "',
+                            '" . $DeclaredValue . "',
+                            '" . $CashRepayment . "',
+                            '" . $BankRepayment . "',
+                            '" . $payer . "',
+                            '" . $preferences['saturday_delivery'] . "',
+                            '" . $preferences['morning_delivery'] . "',
+                            '" . $preferences['open_package'] . "',
                             '',
-                            '".$this->clear($data['continut'])."',
+                            '" . $this->clear($data['continut']) . "',
                             '0'
                         );";
         $connection->query($query);
 
-        $out = $connection->fetchAll("SELECT * FROM `awb_expeditii` WHERE `order_id` = '".$this->clear($orderName)."' LIMIT 1");
+        $out = $connection->fetchAll(
+            "SELECT * FROM `awb_expeditii` WHERE `order_id` = '" . $this->clear($orderName) . "' LIMIT 1"
+        );
         if (count($out) > 0) {
             echo 'ok';
         } else {
@@ -233,7 +249,8 @@ class AddOrder extends Action implements CsrfAwareActionInterface
         }
     }
 
-    public function clear($var) {
+    public function clear($var)
+    {
         return addslashes(trim($var));
     }
 }

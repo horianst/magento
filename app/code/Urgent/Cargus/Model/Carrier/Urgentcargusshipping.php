@@ -7,7 +7,7 @@ use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 
 /**
- * Custom shipping model
+ * Urgentcargusshipping model
  */
 class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
 {

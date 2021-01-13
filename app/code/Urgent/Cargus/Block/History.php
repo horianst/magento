@@ -14,6 +14,9 @@ class History extends Template
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
+    /**
+     * @var array
+     */
     private $data;
     /**
      * @var FormKey

@@ -2,20 +2,18 @@
 
 namespace Urgent\Cargus\Controller\Adminhtml\order;
 
+use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\View\Result\Page;
-use Magento\Framework\View\Result\PageFactory;
 use Urgent\Cargus\Model\UrgentCargus;
-use Exception;
 
 /**
- * Class Index
+ * Class ValidateDelete
  */
 class ValidateDelete extends Action implements CsrfAwareActionInterface
 {
@@ -25,7 +23,7 @@ class ValidateDelete extends Action implements CsrfAwareActionInterface
     private $_resource;
 
     /**
-     * Index constructor.
+     * ValidateDelete constructor.
      *
      * @param Context $context
      * @param ResourceConnection $resource
@@ -36,7 +34,7 @@ class ValidateDelete extends Action implements CsrfAwareActionInterface
         $this->_resource = $resource;
     }
 
-    public function createCsrfValidationException(RequestInterface $request): ? InvalidRequestException
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
@@ -47,8 +45,6 @@ class ValidateDelete extends Action implements CsrfAwareActionInterface
     }
 
     /**
-     * Load the page defined in view/adminhtml/layout/order_index.xml
-     *
      * @return Page
      */
     public function execute()
@@ -65,7 +61,10 @@ class ValidateDelete extends Action implements CsrfAwareActionInterface
 
                 $connection = $this->_resource->getConnection(ResourceConnection::DEFAULT_CONNECTION);
 
-                $query = "UPDATE `awb_expeditii` SET `status` = '0', `cod_bara` = '' WHERE `cod_bara` IN('".implode("','", $awbs)."')";
+                $query = "UPDATE `awb_expeditii` SET `status` = '0', `cod_bara` = '' WHERE `cod_bara` IN('" . implode(
+                        "','",
+                        $awbs
+                    ) . "')";
                 $connection->query($query);
 
                 $this->messageManager->addNoticeMessage(__('AWB-urile selectate au fost anulate!'));

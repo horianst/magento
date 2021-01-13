@@ -9,7 +9,7 @@ use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
- * Class Index
+ * Class View
  */
 class View extends Action implements HttpGetActionInterface
 {

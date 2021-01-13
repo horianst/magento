@@ -2,27 +2,24 @@
 
 namespace Urgent\Cargus\Model;
 
-use Elasticsearch\Common\Exceptions\ClientErrorResponseException;
 use GuzzleHttp\Client;
 use Magento\Framework\App\ObjectManager;
 
 class UrgentCargus
 {
+    public $version = [
+        'major' => '1',
+        'minor' => '9',
+        'revision' => '4',
+        'patch' => '5',
+        'stability' => '',
+        'number' => '',
+    ];
     private $url;
     private $key;
     private $user;
     private $password;
     private $token;
-
-    public $version = [
-        'major'     => '1',
-        'minor'     => '9',
-        'revision'  => '4',
-        'patch'     => '5',
-        'stability' => '',
-        'number'    => '',
-    ];
-
 
     function __construct()
     {
@@ -88,7 +85,6 @@ class UrgentCargus
             return $e->getMessage();
         }
     }
-
 
     public function getAwbs($orderId)
     {
@@ -189,9 +185,6 @@ class UrgentCargus
         }
     }
 
-    /**
-     * Fetch some data from API
-     */
     public function execute()
     {
         try {
@@ -225,7 +218,7 @@ class UrgentCargus
                         'Ocp-Apim-Subscription-Key' => $this->key,
                         'Authorization' => 'Bearer ' . $this->token,
                         'Content-Type' => 'application/json',
-                        'path' => 'MG'.$this->version['major'].$this->version['minor'].$this->version['revision']
+                        'path' => 'MG' . $this->version['major'] . $this->version['minor'] . $this->version['revision']
                     ],
                     'json' => $fields
                 ]
@@ -248,7 +241,7 @@ class UrgentCargus
                         'Ocp-Apim-Subscription-Key' => $this->key,
                         'Authorization' => 'Bearer ' . $this->token,
                         'Content-Type' => 'application/json',
-                        'path' => 'MG'.$this->version['major'].$this->version['minor'].$this->version['revision']
+                        'path' => 'MG' . $this->version['major'] . $this->version['minor'] . $this->version['revision']
                     ],
                     'query' => [
                         'barCode' => $code,
@@ -360,7 +353,6 @@ class UrgentCargus
             return $e->getMessage();
         }
     }
-
 
     public function sendOrder($locationId, $from, $to)
     {

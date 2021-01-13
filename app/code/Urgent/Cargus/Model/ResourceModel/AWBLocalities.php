@@ -2,7 +2,7 @@
 
 namespace Urgent\Cargus\Model\ResourceModel;
 
-use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 class AWBLocalities extends AbstractDb
 {

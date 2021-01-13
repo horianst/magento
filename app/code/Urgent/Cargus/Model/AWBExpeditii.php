@@ -2,9 +2,9 @@
 
 namespace Urgent\Cargus\Model;
 
-use \Magento\Framework\Model\AbstractModel;
-use \Magento\Framework\DataObject\IdentityInterface;
-use \Urgent\Cargus\Api\Data\AWBExpeditiiInterface;
+use Magento\Framework\DataObject\IdentityInterface;
+use Magento\Framework\Model\AbstractModel;
+use Urgent\Cargus\Api\Data\AWBExpeditiiInterface;
 
 /**
  * Class File
@@ -17,15 +17,6 @@ class AWBExpeditii extends AbstractModel implements AWBExpeditiiInterface, Ident
      * Cache tag
      */
     const CACHE_TAG = 'awb_expeditii';
-
-    /**
-     * Post Initialization
-     * @return void
-     */
-    protected function _construct()
-    {
-        $this->_init('Urgent\Cargus\Model\ResourceModel\AWBExpeditii');
-    }
 
     /**
      * Return identities
@@ -55,5 +46,14 @@ class AWBExpeditii extends AbstractModel implements AWBExpeditiiInterface, Ident
     public function setId($id)
     {
         return $this->setData(self::POST_ID, $id);
+    }
+
+    /**
+     * Post Initialization
+     * @return void
+     */
+    protected function _construct()
+    {
+        $this->_init('Urgent\Cargus\Model\ResourceModel\AWBExpeditii');
     }
 }

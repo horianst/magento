@@ -64,8 +64,10 @@ $cities = $block->getCities($data['judet_dest']);
 </div>
 
 <form id="AwbForm" name="AwbForm" method="post">
-    <input name="form_key" type="hidden" value="<?php echo $block->getFormKey() ?>"/>
-    <input name="order_id" type="hidden" value="<?php echo $data['order_id'] ?>" />
+    <input name="form_key" type="hidden" value="<?php
+    echo $block->getFormKey() ?>"/>
+    <input name="order_id" type="hidden" value="<?php
+    echo $data['order_id'] ?>"/>
     <div class="admin__data-grid-wrap">
         <table class="data-grid data-grid-draggable">
             <thead>
@@ -89,7 +91,6 @@ $cities = $block->getCities($data['judet_dest']);
                             $slimPickupPoints,
                             $data['pickup_location_id'] ?? null
                         );
-
                         ?>
                     </div>
                 </td>
@@ -464,48 +465,46 @@ $cities = $block->getCities($data['judet_dest']);
     </div>
 </form>
 
-    <?php
-    button('Salveaza modificari comanda ' . $data['order_id'], 'AwbForm.submit()');
-    button('Anuleaza', 'cancelEdit()', 'default');
+<?php
+button('Salveaza modificari comanda ' . $data['order_id'], 'AwbForm.submit()');
+button('Anuleaza', 'cancelEdit()', 'default');
 
-
-    function button($value, $action, $class = 'basic')
-    {
-        echo ' <button type="button" class="custom-button-class action-' . $class . '" onclick="' . $action . '">
+function button($value, $action, $class = 'basic')
+{
+    echo ' <button type="button" class="custom-button-class action-' . $class . '" onclick="' . $action . '">
         <span>' . $value . '</span>
     </button>';
-    }
+}
 
-    function select($name, $id, $data, $select, $onChange = false, $km = false)
-    {
-        echo '<div class="admin__field">
+function select($name, $id, $data, $select, $onChange = false, $km = false)
+{
+    echo '<div class="admin__field">
                 <div class="admin__field-control">
                     <select class="admin__control-select"  name="' . $name . '" id="' . $id . '"' . ($onChange ? ' onchange="replace()"' : '') . '>';
 
-        if($km){
-            foreach ($data as $index => $value) {
-                echo '<option km="' . $index . '" ' . ($select == $value ? 'selected' : '') . '>' . $value . '</option>';
-            }
-        } else {
-            foreach ($data as $index => $value) {
-                echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
-            }
+    if ($km) {
+        foreach ($data as $index => $value) {
+            echo '<option km="' . $index . '" ' . ($select == $value ? 'selected' : '') . '>' . $value . '</option>';
         }
+    } else {
+        foreach ($data as $index => $value) {
+            echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
+        }
+    }
 
-        echo '</select>
+    echo '</select>
                 </div>
             </div>';
-    }
+}
 
-    function input($name, $type, $id, $data, $sufix = null)
-    {
-        echo '<div class="admin__field">
+function input($name, $type, $id, $data, $sufix = null)
+{
+    echo '<div class="admin__field">
                 <div class="admin__field-control">
                     <input class="admin__control-text"  style="width: 90%" type="' . $type . '" name="' . $name . '" id="' . $id . '" value="' . $data . '">';
-        if ($sufix) {
-            echo $sufix;
-        }
-        echo '</div></div>';
+    if ($sufix) {
+        echo $sufix;
     }
-
-    ?>
+    echo '</div></div>';
+}
+?>

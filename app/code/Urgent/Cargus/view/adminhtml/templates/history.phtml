@@ -25,7 +25,7 @@
                 }
             }
 
-            if($block->getRequest()->getParam('collect_point')){
+            if ($block->getRequest()->getParam('collect_point')) {
                 $originalValue['collect_point'] = $block->getRequest()->getParam('collect_point');
             } else {
                 $originalValue = $block->getConfigParams();
@@ -50,7 +50,6 @@ if ($orders != null) {
     if (!$go) {
         echo 'Pe acest cont de utilizator nu este definit niciun punct de ridicare!<br>Logati-va pe site-ul Urgent Cargus si asignati un punct de ridicare acestui cont.';
     } else {
-
         if (isset($orders['error'])) {
             echo $orders['error'];
         } else {
@@ -108,12 +107,11 @@ if ($orders != null) {
                         echo count($orders); ?> comenzi expediate din punctul curent de ridicare!</p>
                 </div>
 
-            <?php
+                <?php
             }
         }
     }
 } ?>
-
 
 <?php
 function tableRow($index, $order, $block)
@@ -141,8 +139,7 @@ function tableRow($index, $order, $block)
     echo '<td><div class="data-grid-cell-content">' . $order->TotalWeight . '</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $order->OrdStatus . '</div></td>';
 
-    $url = $block->getUrl('cargus/history/view', ['id' => $order->OrderId] );
-
+    $url = $block->getUrl('cargus/history/view', ['id' => $order->OrderId]);
 
     echo '<td><div class="data-grid-cell-content"> ' . ($order->NoAwb > 0 ? '<a class="action-select" href="' . $url . '">Afiseaza</a>' : '') . '</div></td></tr>';
 }
@@ -167,5 +164,4 @@ function select($label, $name, $id, $data, $select)
 
     echo '</select></div></div>';
 }
-
 ?>

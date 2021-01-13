@@ -1,7 +1,8 @@
 <?php
+
 namespace Urgent\Cargus\Model\ResourceModel\AWBExpeditii;
 
-use \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 class Collection extends AbstractCollection
 {

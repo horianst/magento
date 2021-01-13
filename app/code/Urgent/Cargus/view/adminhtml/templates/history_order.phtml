@@ -1,7 +1,8 @@
 <div class="fieldset-wrapper">
     <div class="fieldset-wrapper-title">
         <strong class="title">
-            <span>ISTORIC AWB-uri pentru comanda <?php echo $block->getOrderId() ?></span>
+            <span>ISTORIC AWB-uri pentru comanda <?php
+                echo $block->getOrderId() ?></span>
         </strong>
     </div>
 </div>
@@ -10,7 +11,6 @@
 
 $awbs = $block->getOrder();
 
-
 if ($awbs != null) {
     if (isset($awbs['error'])) {
         echo $awbs['error'];
@@ -18,7 +18,6 @@ if ($awbs != null) {
         if (count($awbs) == 0) {
             echo 'Nu exista nicio comanda expediata din acest punct de lucru!';
         } else { ?>
-
             <div class="admin__data-grid-wrap">
                 <table class="data-grid data-grid-draggable">
                     <thead>
@@ -65,7 +64,6 @@ if ($awbs != null) {
                     </tr>
                     </thead>
                     <tbody>
-
                     <?php
                     foreach ($awbs as $index => $awb) {
                         tableRow($index, $awb, $block);
@@ -79,14 +77,12 @@ if ($awbs != null) {
     }
 } ?>
 
-
 <?php
 function tableRow($index, $awb, $block)
 {
     $extraClass = ($index % 2 == 0) ? '' : ' _odd-row';
 
     echo '<tr class="data-row' . $extraClass . '">';
-
     echo '<td><div class="data-grid-cell-content">' . $awb->CustomString . '</div></td>';
     echo '<td><div class="data-grid-cell-content"><a target="_blank" style="text-decoration:none; color:#000;" href="https://www.urgentcargus.ro/Private/Tracking.aspx?CodBara=' . $awb->BarCode . '">' . $awb->BarCode . '</a></div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb->ShippingCost->GrandTotal . ' lei</div></td>';
@@ -125,5 +121,4 @@ function select($label, $name, $id, $data, $select)
 
     echo '</select></div></div>';
 }
-
 ?>

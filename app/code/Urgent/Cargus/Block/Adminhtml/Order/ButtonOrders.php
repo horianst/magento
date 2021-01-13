@@ -1,9 +1,10 @@
 <?php
+
 namespace Urgent\Cargus\Block\Adminhtml\Order;
 
-use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\Backend\Block\Widget\Context;
 use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
 class ButtonOrders implements ButtonProviderInterface
 {
@@ -18,7 +19,7 @@ class ButtonOrders implements ButtonProviderInterface
     private $context;
 
     /**
-     * CustomButton constructor.
+     * ButtonOrders constructor.
      *
      * @param AuthorizationInterface $authorization
      * @param Context $context
@@ -42,7 +43,7 @@ class ButtonOrders implements ButtonProviderInterface
 
         return [
             'label' => __('Adauga in lista de livrari Urgent Cargus'),
-            'on_click' =>'addOrders()',
+            'on_click' => 'addOrders()',
             'class' => 'primary',
             'sort_order' => 10
         ];

@@ -9,7 +9,7 @@ use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
- * Class Index
+ * Class Awb
  */
 class Awb extends Action implements HttpGetActionInterface
 {
@@ -19,7 +19,7 @@ class Awb extends Action implements HttpGetActionInterface
     protected $resultPageFactory;
 
     /**
-     * Index constructor.
+     * Awb constructor.
      *
      * @param Context $context
      * @param PageFactory $resultPageFactory

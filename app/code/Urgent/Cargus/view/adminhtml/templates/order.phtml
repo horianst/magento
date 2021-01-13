@@ -6,7 +6,6 @@
     </div>
 </div>
 
-
 <?php
 $pickupPoints = $block->getPickupPoints();
 
@@ -28,18 +27,20 @@ if ($block->getRequest()->getParam('collect_point')) {
 
 $awbs = $block->getWaitningAwbs();
 
-
 if (count($awbs) == 0) {
     echo 'Nu exista niciun AWB in asteptare!';
 } else { ?>
-    <form id="WaitForm" name="WaitForm" method="post" action="<?php echo $block->getUrl('cargus/order/Wait'); ?>">
-        <input name="form_key" type="hidden" value="<?php echo $block->getFormKey() ?>"/>
+    <form id="WaitForm" name="WaitForm" method="post" action="<?php
+    echo $block->getUrl('cargus/order/Wait'); ?>">
+        <input name="form_key" type="hidden" value="<?php
+        echo $block->getFormKey() ?>"/>
         <div class="admin__data-grid-wrap">
             <table class="data-grid data-grid-draggable">
                 <thead>
                 <tr>
                     <th class="data-grid-th">
-                        <span class="data-grid-cell-content"><input type="checkbox" class="checkbox_master" rel="grup1" name="null"/></span>
+                        <span class="data-grid-cell-content"><input type="checkbox" class="checkbox_master" rel="grup1"
+                                                                    name="null"/></span>
                     </th>
                     <th class="data-grid-th">
                         <span class="data-grid-cell-content">ID Comanda</span>
@@ -77,18 +78,15 @@ if (count($awbs) == 0) {
                 </tr>
                 </thead>
                 <tbody>
-
                 <?php
                 foreach ($awbs as $index => $Awb) {
                     firstTableRow($index, $Awb, $slimPickupPoints, $originalValue, $block);
                 }
                 ?>
-
                 </tbody>
             </table>
         </div>
     </form>
-
     <?php
 
     button('Valideaza AWB-urile bifate', 'WaitForm.submit()');
@@ -120,13 +118,15 @@ if (count($awbs) == 0) {
 } else { ?>
     <form id="ValidateForm" name="ValidateForm" method="post" action="<?php
     echo $block->getUrl('cargus/order/ValidateDelete'); ?>">
-        <input name="form_key" type="hidden" value="<?php echo $block->getFormKey() ?>"/>
+        <input name="form_key" type="hidden" value="<?php
+        echo $block->getFormKey() ?>"/>
         <div class="admin__data-grid-wrap">
             <table class="data-grid data-grid-draggable">
                 <thead>
                 <tr>
                     <th class="data-grid-th">
-                        <span class="data-grid-cell-content"><input type="checkbox" name="null" class="checkbox_master" rel="grup2"/></span>
+                        <span class="data-grid-cell-content"><input type="checkbox" name="null" class="checkbox_master"
+                                                                    rel="grup2"/></span>
                     </th>
                     <th class="data-grid-th">
                         <span class="data-grid-cell-content">ID Comanda</span>
@@ -207,7 +207,10 @@ function firstTableRow($index, $awb, $slimPickupPoints, $originalValue, $block)
     echo '<td><div class="data-grid-cell-content">' . $awb['ramburs_numerar'] . ' lei</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb['ramburs_cont'] . ' lei</div></td>';
     echo '<td><div class="data-grid-cell-content">' . ($awb['platitor_expeditie'] == 2 ? 'Destinatar' : 'Expeditor') . '</div></td>';
-    echo '<td><div class="data-grid-cell-content"><a class="action-select" href="' . $block->getUrl('cargus/order/edit', ['id' =>  $awb['id']]) . '">Editare</a></div></td></tr>';
+    echo '<td><div class="data-grid-cell-content"><a class="action-select" href="' . $block->getUrl(
+            'cargus/order/edit',
+            ['id' => $awb['id']]
+        ) . '">Editare</a></div></td></tr>';
 }
 
 function secondTableRow($index, $awb)
@@ -243,10 +246,11 @@ function select($name, $id, $data, $select)
 
     echo '</select></div></div>';
 }
+
 ?>
 
 <script type="text/javascript">
-    require([ 'jquery', 'jquery/ui'], function($){
+    require(['jquery', 'jquery/ui'], function ($) {
         $(".checkbox_master").change(function () {
             var rel = $(this).attr('rel');
             $('.' + rel).attr("checked", this.checked);
@@ -264,14 +268,14 @@ function select($name, $id, $data, $select)
     var WaitForm = new varienForm('WaitForm');
     var ValidateForm = new varienForm('ValidateForm');
 
-    function deleteWait(){
-        require([ 'jquery', 'jquery/ui'], function($){
+    function deleteWait() {
+        require(['jquery', 'jquery/ui'], function ($) {
             $('#WaitForm').attr('action', '<?php echo $block->getUrl('cargus/order/WaitDelete'); ?>').submit();
         });
     }
 
     function printValidate() {
-        require([ 'jquery', 'jquery/ui'], function($){
+        require(['jquery', 'jquery/ui'], function ($) {
             var codes = [];
             $('input.grup2[name*=\'awb\']:checked').each(function () {
                 codes.push($(this).val());
@@ -288,7 +292,10 @@ function select($name, $id, $data, $select)
 
     function finalizareComanda() {
         var url = "<?php echo $block->getUrl('cargus/order/Send'); ?>";
-        window.location = '<?php echo $this->getUrl('cargus/order/send', ['id' => $originalValue['collect_point']]); ?>';
+        window.location = '<?php echo $this->getUrl(
+            'cargus/order/send',
+            ['id' => $originalValue['collect_point']]
+        ); ?>';
         return false;
     }
 </script>

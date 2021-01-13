@@ -9,7 +9,6 @@ use Urgent\Cargus\Model\UrgentCargus;
 
 class HistoryOrder extends Template
 {
-
     protected $request;
 
     public function __construct(Context $context, array $data = [], Http $request)
@@ -17,7 +16,6 @@ class HistoryOrder extends Template
         parent::__construct($context, $data);
         $this->request = $request;
     }
-
 
     public function getOrder()
     {
