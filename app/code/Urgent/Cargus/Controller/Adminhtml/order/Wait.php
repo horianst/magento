@@ -55,9 +55,8 @@ class Wait extends Action implements CsrfAwareActionInterface
 
         if($awbs){
             $connection = $this->_resource->getConnection(ResourceConnection::DEFAULT_CONNECTION);
-            $awbExpeditii = $connection->getTableName('awb_expeditii');
 
-            $data = $connection->fetchAll('SELECT * FROM '.$awbExpeditii.' WHERE status = 0 AND order_id IN(' . implode(', ', $awbs) . ') ORDER BY timestamp DESC');
+            $data = $connection->fetchAll('SELECT * FROM awb_expeditii WHERE status = 0 AND order_id IN(' . implode(', ', $awbs) . ') ORDER BY timestamp DESC');
 
             $errors = [];
             $done = 0;
@@ -88,7 +87,6 @@ class Wait extends Action implements CsrfAwareActionInterface
                     'BankRepayment' => $item['ramburs_cont'],
                     'OtherRepayment' => $item['ramburs_alt'],
                     'OpenPackage' => $item['deschidere_colet'] == 1 ? true : false,
-                    //'PriceTableId' => Mage::getStoreConfig('urgentcargus/price_id'),
                     'PriceTableId' => null,
                     'ShipmentPayer' => $item['platitor_expeditie'],
                     'ServiceId' => $item['platitor_expeditie'] == 1 ? 1 : 4,

@@ -54,9 +54,39 @@ class OrderEdit extends Template
         return $urgentCargus->getCounties();
     }
 
-    public function getCities($countyId)
+    public function getCities($countyCode)
     {
-        $urgentCargus = new UrgentCargus();
-        return $urgentCargus->getCities($countyId);
+        $cities = [];
+
+        $connection = $this->_resource->getConnection(ResourceConnection::DEFAULT_CONNECTION);
+        $county = $connection->fetchAll("SELECT * FROM directory_country_region WHERE country_id = 'RO' AND code = '".$countyCode."'")[0];
+
+        $preferences = unserialize($this->scopeConfig->getValue('urgent/cargus/preferences'));
+
+        if ($preferences['cities'] == 1) {
+            $localities = $connection->fetchAll("SELECT l.name, l.in_network, l.extra_km FROM awb_localities l LEFT JOIN awb_counties c ON c.county_id = l.county_id WHERE c.abbreviation = '".$county['code']."' ORDER BY l.name ASC");
+            foreach ($localities as $locality){
+                $index = $locality['in_network'] ? 0 : $locality['extra_km'];
+                $cities[$index] = $locality['name'];
+            }
+        } else {
+            $urgentCargus = new UrgentCargus();
+            $countiesList = $urgentCargus->getCounties();
+
+            $counties = [];
+
+            foreach ($countiesList as $county) {
+                $counties[strtolower($county->Abbreviation)] = $county->CountyId;
+            }
+
+            $localities = $urgentCargus->getCities($counties[strtolower($countyCode)]);
+
+            foreach ($localities as $locality){
+                $index = $locality->InNetwork ? 0 : $locality->ExtraKm;
+                $cities[$index] =$locality->Name;
+            }
+        }
+
+        return $cities;
     }
 }

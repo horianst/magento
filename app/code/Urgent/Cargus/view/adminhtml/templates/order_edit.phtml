@@ -9,21 +9,21 @@
         require(['jquery', 'jquery/ui'], function ($) {
             var ajaxRequest;
 
-            var parent = $('#judet_id_id');
+            var parent = $('#judet_dest_id');
 
             ajaxRequest = $.ajax({
                 url: "<?php echo $this->getUrl('cargus/order/cities'); ?>",
                 type: 'GET',
-                data: {id: parent.val()},
+                data: {code: parent.val()},
             });
 
             ajaxRequest.done(function (response, textStatus, jqXHR) {
-                var element = $('#localitate_id_id');
+                var element = $('#localitate_dest_id');
 
                 if (response == 'null') {
-                    element.replaceWith('<input type="text" name="localitate_id" class="admin__control-text" id="localitate_id_id" value="" />');
+                    element.replaceWith('<input type="text" name="localitate_dest" class="admin__control-text" id="localitate_dest_id" value="" />');
                 } else {
-                    element.replaceWith('<select name="localitate_id" class="admin__control-select" id="localitate_id_id">' + response + '</select>');
+                    element.replaceWith('<select name="localitate_dest" class="admin__control-select" id="localitate_dest_id">' + response + '</select>');
                 }
             });
         });
@@ -45,17 +45,13 @@ $slimCounties = [];
 $counties = $block->getCounties();
 
 foreach ($counties as $countie) {
-    $slimCounties[$countie->CountyId] = $countie->Name;
+    $slimCounties[$countie->Abbreviation] = $countie->Name;
 }
 
 $data = $block->getWaitAwb()[0];
 
-$slimCities = [];
-$cities = $block->getCities($data['judet_id']);
+$cities = $block->getCities($data['judet_dest']);
 
-foreach ($cities as $city) {
-    $slimCities[$city->LocalityId] = $city->Name;
-}
 ?>
 
 <div class="fieldset-wrapper">
@@ -132,10 +128,10 @@ foreach ($cities as $city) {
                     <div class="data-grid-cell-content">
                         <?php
                         select(
-                            'judet_id',
-                            'judet_id_id',
+                            'judet_dest',
+                            'judet_dest_id',
                             $slimCounties,
-                            $data['judet_id'] ?? null,
+                            $data['judet_dest'] ?? null,
                             true
                         );
                         ?>
@@ -150,10 +146,12 @@ foreach ($cities as $city) {
                     <div class="data-grid-cell-content">
                         <?php
                         select(
-                            'localitate_id',
-                            'localitate_id_id',
-                            $slimCities,
-                            $data['localitate_id'] ?? null
+                            'localitate_dest',
+                            'localitate_dest_id',
+                            $cities,
+                            $data['localitate_dest'] ?? null,
+                            false,
+                            true
                         );
                         ?>
                     </div>
@@ -478,14 +476,20 @@ foreach ($cities as $city) {
     </button>';
     }
 
-    function select($name, $id, $data, $select, $onChange = false)
+    function select($name, $id, $data, $select, $onChange = false, $km = false)
     {
         echo '<div class="admin__field">
                 <div class="admin__field-control">
                     <select class="admin__control-select"  name="' . $name . '" id="' . $id . '"' . ($onChange ? ' onchange="replace()"' : '') . '>';
 
-        foreach ($data as $index => $value) {
-            echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
+        if($km){
+            foreach ($data as $index => $value) {
+                echo '<option km="' . $index . '" ' . ($select == $value ? 'selected' : '') . '>' . $value . '</option>';
+            }
+        } else {
+            foreach ($data as $index => $value) {
+                echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
+            }
         }
 
         echo '</select>

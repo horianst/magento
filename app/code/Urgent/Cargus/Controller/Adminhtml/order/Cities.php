@@ -52,15 +52,24 @@ class Cities extends Action implements CsrfAwareActionInterface
      */
     public function execute()
     {
-        $countyId = $this->getRequest()->getParam('id');
+        $countyCode = $this->getRequest()->getParam('code');
 
         $urgentCargus = new UrgentCargus();
-        $cities = $urgentCargus->getCities($countyId);
+        $countiesList = $urgentCargus->getCounties();
+
+        $counties = [];
+
+        foreach ($countiesList as $county) {
+            $counties[$county->Abbreviation] = $county->CountyId;
+        }
+
+
+        $cities = $urgentCargus->getCities($counties[$countyCode]);
 
         $response = '';
 
         foreach ($cities as $city){
-            $response = $response . '<option value="' . $city->LocalityId . '">' . $city->Name . "</option>\n";
+            $response = $response . '<option km="' . $city->ExtraKm . '">' . $city->Name . "</option>\n";
         }
 
         echo $response;

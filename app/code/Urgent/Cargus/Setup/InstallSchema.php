@@ -60,6 +60,33 @@ class InstallSchema implements InstallSchemaInterface
             $setup->getConnection()->createTable($table);
         }
 
+        $tableName = $setup->getTable('awb_counties');
+
+        if ($setup->getConnection()->isTableExists($tableName) != true) {
+            $table = $setup->getConnection()
+                ->newTable($tableName)
+                ->addColumn('id', Table::TYPE_INTEGER, 11, ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true], 'ID')
+                ->addColumn('name', Table::TYPE_TEXT, 64, ['nullable' => false ])
+                ->addColumn('abbreviation', Table::TYPE_TEXT, 4, ['nullable' => false ])
+                ->addColumn('country_id', Table::TYPE_INTEGER, 11, ['nullable' => false ]);
+            $setup->getConnection()->createTable($table);
+        }
+
+        $tableName = $setup->getTable('awb_localities');
+
+        $table = $setup->getConnection()
+            ->newTable($tableName)
+            ->addColumn('id', Table::TYPE_INTEGER, 11, ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true], 'ID')
+            ->addColumn('name', Table::TYPE_TEXT, 64, ['nullable' => false ])
+            ->addColumn('parent_id', Table::TYPE_INTEGER, 11, ['nullable' => false ])
+            ->addColumn('extra_km', Table::TYPE_INTEGER, 11, ['nullable' => false ])
+            ->addColumn('in_network', Table::TYPE_INTEGER, 1, ['nullable' => false ])
+            ->addColumn('county_id', Table::TYPE_INTEGER, 11, ['nullable' => false ])
+            ->addColumn('country_id', Table::TYPE_INTEGER, 11, ['nullable' => false ]);
+        if ($setup->getConnection()->isTableExists($tableName) != true) {
+            $setup->getConnection()->createTable($table);
+        }
+
         $setup->endSetup();
     }
 }
