@@ -81,7 +81,7 @@ function addOrders() {
         if (status_final) {
             alert(status_final);
         } else {
-            alert('Nu ati selectat nicio comanda pentru a fi adaugata in lista de livrari Urgent Cargus!');
+            alert('Nu ati selectat nicio comanda pentru a fi adaugata in lista de livrari Cargus!');
         }
     });
 }

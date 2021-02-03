@@ -11,7 +11,7 @@ class ButtonOrder
         $subject->addButton(
             'order_custom_button',
             [
-                'label' => __('Adauga in lista de livrari Urgent Cargus'),
+                'label' => __('Adauga in lista de livrari Cargus'),
                 'class' => __('custom-button'),
                 'id' => 'order-view-custom-button',
                 'onclick' => 'addOrder()'

@@ -84,7 +84,7 @@ function tableRow($index, $awb, $block)
 
     echo '<tr class="data-row' . $extraClass . '">';
     echo '<td><div class="data-grid-cell-content">' . $awb->CustomString . '</div></td>';
-    echo '<td><div class="data-grid-cell-content"><a target="_blank" style="text-decoration:none; color:#000;" href="https://www.urgentcargus.ro/Private/Tracking.aspx?CodBara=' . $awb->BarCode . '">' . $awb->BarCode . '</a></div></td>';
+    echo '<td><div class="data-grid-cell-content"><a target="_blank" style="text-decoration:none; color:#000;" href="https://www.cargus.ro/Private/Tracking.aspx?CodBara=' . $awb->BarCode . '">' . $awb->BarCode . '</a></div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb->ShippingCost->GrandTotal . ' lei</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb->Recipient->Name . '</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb->Recipient->LocalityName . '</div></td>';

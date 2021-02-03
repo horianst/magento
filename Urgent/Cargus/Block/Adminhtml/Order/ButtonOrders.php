@@ -42,7 +42,7 @@ class ButtonOrders implements ButtonProviderInterface
         }
 
         return [
-            'label' => __('Adauga in lista de livrari Urgent Cargus'),
+            'label' => __('Adauga in lista de livrari Cargus'),
             'on_click' => 'addOrders()',
             'class' => 'primary',
             'sort_order' => 10

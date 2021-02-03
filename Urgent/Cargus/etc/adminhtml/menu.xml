@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-        <add id="Urgent_Cargus::main" title="Urgent Cargus" module="Urgent_Cargus" sortOrder="100" resource="Urgent_Cargus::main"/>
+        <add id="Urgent_Cargus::main" title="Cargus" module="Urgent_Cargus" sortOrder="100" resource="Urgent_Cargus::main"/>
         <add id="Urgent_Cargus::main_order" title="Comanda" translate="order" module="Urgent_Cargus" parent="Urgent_Cargus::main" sortOrder="10" dependsOnModule="Urgent_Cargus" action="cargus/order" resource="Urgent_Cargus::main"/>
         <add id="Urgent_Cargus::main_history" title="Istoric" translate="history" module="Urgent_Cargus" parent="Urgent_Cargus::main" sortOrder="20" dependsOnModule="Urgent_Cargus" action="cargus/history" resource="Urgent_Cargus::main"/>
         <add id="Urgent_Cargus::main_preferences" title="Preferinte" translate="preferences" module="Urgent_Cargus" parent="Urgent_Cargus::main" sortOrder="30" dependsOnModule="Urgent_Cargus" action="cargus/preferences" resource="Urgent_Cargus::main"/>
