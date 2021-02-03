@@ -91,16 +91,18 @@ class Wait extends Action implements CsrfAwareActionInterface
                     'CashRepayment' => $item['ramburs_numerar'],
                     'BankRepayment' => $item['ramburs_cont'],
                     'OtherRepayment' => $item['ramburs_alt'],
-                    'OpenPackage' => $item['deschidere_colet'] == 1 ? true : false,
+                    'OpenPackage' => $item['deschidere_colet'] == 0,
                     'PriceTableId' => null,
-                    'ShipmentPayer' => $item['platitor_expeditie'],
-                    'ServiceId' => $item['platitor_expeditie'] == 1 ? 1 : 4,
-                    'MorningDelivery' => $item['livrare_dimineata'] == 1 ? true : false,
-                    'SaturdayDelivery' => $item['livrare_sambata'] == 1 ? true : false,
+                    'ShipmentPayer' => $item['platitor_expeditie'] == 0 ? 'sender' : 'recipient',
+                    'ServiceId' => $item['platitor_expeditie'] == 0 ? 1 : 4,
+                    'MorningDelivery' => $item['livrare_dimineata'] == 0,
+                    'SaturdayDelivery' => $item['livrare_sambata'] == 0,
                     'Observations' => $item['observatii'],
                     'PackageContent' => $item['continut'],
                     'CustomString' => $item['order_id']
                 ];
+
+
 
                 $urgentCargus = new UrgentCargus();
                 $codBara = $urgentCargus->validateAwb($fields);
