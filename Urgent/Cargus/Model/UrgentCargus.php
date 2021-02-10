@@ -206,6 +206,29 @@ class UrgentCargus
         }
     }
 
+    public function ShippingCalculation($fields)
+    {
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'POST',
+                $this->url . '/ShippingCalculation',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json',
+                        'path' => 'MG' . $this->version['major'] . $this->version['minor'] . $this->version['revision']
+                    ],
+                    'json' => $fields
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function validateAwb($fields)
     {
         try {

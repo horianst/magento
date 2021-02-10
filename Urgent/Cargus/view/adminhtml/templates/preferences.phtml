@@ -66,6 +66,8 @@ if (!$block->checkCredentials()) {
                         ['Da', 'Nu'],
                         $originalValue['morning_delivery'] ?? null
                     );
+
+                    //todo recheck this arrays
                     select(
                         'Ramburs',
                         'repayment',
@@ -73,6 +75,8 @@ if (!$block->checkCredentials()) {
                         ['Numerar', 'Cont colector'],
                         $originalValue['repayment'] ?? null
                     );
+
+
                     select(
                         'Platitor',
                         'payer',
