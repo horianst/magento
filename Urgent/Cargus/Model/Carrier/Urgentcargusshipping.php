@@ -6,9 +6,11 @@ use Magento\Directory\Model\Currency;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
+use Magento\Quote\Model\Quote\Address\RateResult\Method;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
+use Magento\Shipping\Model\Rate\Result;
 use Magento\Shipping\Model\Rate\ResultFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -22,7 +24,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
     /**
      * @var string
      */
-    protected $_code = 'urgentcargusshipping';
+    protected $_code = 'customshipping';
 
     /**
      * @var bool
@@ -77,7 +79,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
      * Custom Shipping Rates Collector
      *
      * @param RateRequest $request
-     * @return \Magento\Shipping\Model\Rate\Result|bool
+     * @return Result|bool
      */
     public function collectRates(RateRequest $request)
     {
@@ -85,34 +87,30 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
             return false;
         }
 
-        /** @var \Magento\Shipping\Model\Rate\Result $result */
+        /** @var Result $result */
         $result = $this->rateResultFactory->create();
-        $result->append($this->calculeazaTransport($request));
+
+        /** @var Method $method */
+        $method = $this->rateMethodFactory->create();
+
+        $method->setCarrier($this->_code);
+        $method->setCarrierTitle('Cargus');
+
+        $method->setMethod($this->_code);
+        $method->setMethodTitle('Standard');
+
+        $shippingCost = $this->getShippingCost($request);
+
+        $method->setPrice($shippingCost);
+        $method->setCost($shippingCost);
+
+        $result->append($method);
 
         return $result;
     }
 
-    /**
-     * @return array
-     */
-    public function getAllowedMethods()
+    public function getShippingCost(RateRequest $request)
     {
-        return [$this->_code => $this->getConfigData('name')];
-    }
-
-    public function isTrackingAvailable() {
-        return true;
-    }
-
-    public function calculeazaTransport(Mage_Shipping_Model_Rate_Request $request) {
-
-        /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
-        $method = $this->rateMethodFactory->create();
-        $method->setCarrier($this->_code);
-        $method->setCarrierTitle('Cargus');
-        $method->setMethod($this->_code);
-        $method->setMethodTitle('Standard');
-
         if (strlen(trim($request->getDestCity())) < 1 || strlen(trim($request->getDestRegionCode())) < 1) {
             return false;
         }
@@ -153,24 +151,20 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
             }
         }
 
-        $params =  unserialize($this->scopeConfig->getValue('urgent/cargus/preferences'));
+        $params = unserialize($this->scopeConfig->getValue('urgent/cargus/preferences'));
 
         // obtine totalul cosului din request
         $valoare = $request->getPackageValue() * $base2ron;
 
         // stabilesc daca se ofera transport gratuit
         if ($params['max_free_transport'] > 0 && $valoare > $params['max_free_transport']) {
-            $method->setCost(0);
-            $method->setPrice(0);
-            return $method;
+            return 0;
         }
 
         // stabilesc daca exista un cost fix configurat si setez pretul in functie de plafonul pentru transport gratuit
         if ($params['fixed_cost_transport'] || $params['fixed_cost_transport'] == '0') {
             $costfix = $params['fixed_cost_transport'];
-            $method->setCost($costfix);
-            $method->setPrice($costfix);
-            return $method;
+            return $costfix;
         }
 
         // calculeaza transportul
@@ -179,6 +173,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         } else {
             $DeclaredValue = 0;
         }
+
         if ($params['repayment'] == 'bank') {
             $CashRepayment = 0;
             $BankRepayment = round($valoare, 2);
@@ -186,8 +181,10 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
             $CashRepayment = round($valoare, 2);
             $BankRepayment = 0;
         }
+
         if (isset($_POST['payment']['method'])) {
-            if (strpos($_POST['payment']['method'], 'cashondelivery') !== false) {} else {
+            if (strpos($_POST['payment']['method'], 'cashondelivery') !== false) {
+            } else {
                 $CashRepayment = 0;
                 $BankRepayment = 0;
             }
@@ -198,9 +195,11 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         // UC punctul de ridicare default
         $location = array();
         $pickups = $urgentCargus->execute();
+
         if (is_null($pickups)) {
             die('Nu exista niciun punct de ridicare asociat acestui cont!');
         }
+
         foreach ($pickups as $pick) {
             if ($params['collect_point'] == $pick['LocationId']) {
                 $location = $pick;
@@ -252,13 +251,19 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         }
 
         $total = round($calculate['GrandTotal'] * $ron2base, 2);
+
         if ($request->getFreeShipping()) {
-            $method->setCost(0);
-            $method->setPrice(0);
+            return 0;
         } else {
-            $method->setCost($total);
-            $method->setPrice($total);
+            return $total;
         }
-        return $method;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllowedMethods()
+    {
+        return [$this->_code => 'Standard'];
     }
 }

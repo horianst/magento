@@ -4,9 +4,6 @@
         <carriers>
             <customshipping>
                 <active>0</active>
-                <title>Cargus Shipping</title>
-                <name>Cargus Shipping Method Name</name>
-                <shipping_cost>10</shipping_cost>
                 <sallowspecific>0</sallowspecific>
                 <sort_order>15</sort_order>
                 <model>Urgent\Cargus\Model\Carrier\Urgentcargusshipping</model>

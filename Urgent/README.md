@@ -18,13 +18,14 @@ Modulul Urgent_Cargus ar trebui sa fie enabled
 
 Faceti un update
 bin/magento setup:upgrade
-magento setup:di:compile
+bin/magento setup:di:compile
 
 Posibil ca aceste activitati sa fi afectat accesabilitatea proiectului
 Actualizeaza drepturile asupra proiectului
 
 php bin/magento cache:flush
 chmod -R 775 /<path>/<to>/<root>
+chown -R nobody
 
 [comment]: <> (chown -R apache: /<path>/<to>/<root>)
 
@@ -32,7 +33,7 @@ acceseaza pagina de admin
 
 dute la stores/configuration
 
-click pe sales/Shipping Methods/Urgent Cargus Shipping
+click pe sales/Shipping Methods/Cargus Shipping
 
 adauga 
 api url
