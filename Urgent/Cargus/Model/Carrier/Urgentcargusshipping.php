@@ -17,7 +17,7 @@ use Psr\Log\LoggerInterface;
 use Urgent\Cargus\Model\UrgentCargus;
 
 /**
- * Urgentcargusshipping model
+ * Custom shipping model
  */
 class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
 {
@@ -32,12 +32,12 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
     protected $_isFixed = true;
 
     /**
-     * @var ResultFactory
+     * @var \Magento\Shipping\Model\Rate\ResultFactory
      */
     private $rateResultFactory;
 
     /**
-     * @var MethodFactory
+     * @var \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory
      */
     private $rateMethodFactory;
     /**
@@ -50,19 +50,24 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
     private $storeManager;
 
     /**
-     * @param ScopeConfigInterface $scopeConfig
-     * @param ErrorFactory $rateErrorFactory
-     * @param LoggerInterface $logger
-     * @param ResultFactory $rateResultFactory
-     * @param MethodFactory $rateMethodFactory
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory
+     * @param \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory
      * @param array $data
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
-        ErrorFactory $rateErrorFactory,
-        LoggerInterface $logger,
-        ResultFactory $rateResultFactory,
-        MethodFactory $rateMethodFactory,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory,
+        \Psr\Log\LoggerInterface $logger,
+        \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
+        \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
         Currency $currencyModel,
         StoreManagerInterface $storeManager,
         array $data = []
@@ -73,13 +78,14 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         $this->rateMethodFactory = $rateMethodFactory;
         $this->currenciesModel = $currencyModel;
         $this->storeManager = $storeManager;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
      * Custom Shipping Rates Collector
      *
      * @param RateRequest $request
-     * @return Result|bool
+     * @return \Magento\Shipping\Model\Rate\Result|bool
      */
     public function collectRates(RateRequest $request)
     {
@@ -87,10 +93,10 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
             return false;
         }
 
-        /** @var Result $result */
+        /** @var \Magento\Shipping\Model\Rate\Result $result */
         $result = $this->rateResultFactory->create();
 
-        /** @var Method $method */
+        /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
         $method = $this->rateMethodFactory->create();
 
         $method->setCarrier($this->_code);
@@ -201,7 +207,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         }
 
         foreach ($pickups as $pick) {
-            if ($params['collect_point'] == $pick['LocationId']) {
+            if ($params['collect_point'] == $pick->LocationId) {
                 $location = $pick;
             }
         }
@@ -218,7 +224,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
 
         // UC shipping calculation
         $fields = array(
-            'FromLocalityId' => $location['LocalityId'],
+            'FromLocalityId' => $location->LocationId,
             'ToLocalityId' => 0,
             'FromCountyName' => '',
             'FromLocalityName' => '',
@@ -243,14 +249,14 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
 
         $calculate = $urgentCargus->ShippingCalculation($fields);
 
-        if (is_null($calculate) || (is_array($calculate) && isset($calculate['Error']))) {
+        if (is_null($calculate) || isset($calculate->Error)) {
             echo '<pre>';
             print_r($calculate);
             print_r($fields);
             die();
         }
 
-        $total = round($calculate['GrandTotal'] * $ron2base, 2);
+        $total = round($calculate->GrandTotal * $ron2base, 2);
 
         if ($request->getFreeShipping()) {
             return 0;

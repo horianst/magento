@@ -24,8 +24,8 @@ Posibil ca aceste activitati sa fi afectat accesabilitatea proiectului
 Actualizeaza drepturile asupra proiectului
 
 php bin/magento cache:flush
-chmod -R 775 /<path>/<to>/<root>
-chown -R nobody
+chmod -R 755 /<path>/<to>/<root>
+chown -R ecom:ecom /magento2
 
 [comment]: <> (chown -R apache: /<path>/<to>/<root>)
 
