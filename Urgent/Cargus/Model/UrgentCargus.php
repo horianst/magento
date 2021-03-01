@@ -326,7 +326,7 @@ class UrgentCargus
         }
     }
 
-    public function printAwb($barCodes)
+    public function printAwb($barCodes, $format)
     {
         try {
             $client = new Client();
@@ -341,7 +341,7 @@ class UrgentCargus
                     ],
                     'query' => [
                         'type' => 'PDF',
-                        'format' => 0,
+                        'format' => $format,
                         'barCodes' => $barCodes,
                     ]
                 ]

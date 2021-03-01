@@ -179,6 +179,12 @@ if (count($awbs) == 0) {
     </form>
 
     <?php
+    select(
+        'print_format',
+        'print_format_id',
+        ['A4', '10x14'],
+         null
+    );
     button('Printeaza AWB-urile bifate', 'printValidate()');
     button('Finalizeaza comanda', 'finalizareComanda()');
     button('Anuleaza AWB-urile bifate', 'ValidateForm.submit()', 'default');
@@ -280,10 +286,12 @@ function select($name, $id, $data, $select)
             $('input.grup2[name*=\'awb\']:checked').each(function () {
                 codes.push($(this).val());
             });
+
+            var format = $('#print_format_id').val();
             if (codes.length > 0) {
                 var url = "<?php echo $block->getUrl('cargus/order/AwbPrint'); ?>";
                 var stringCodes = "[" + codes.join(",") + "]";
-                window.open(url + "?bar_codes=" + stringCodes, "", "width=900, height=600, left=50, top=50");
+                window.open(url + "?bar_codes=" + stringCodes + "&format=" + format, "", "width=900, height=600, left=50, top=50");
                 location.reload();
             }
             return false;

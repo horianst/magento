@@ -42,10 +42,11 @@ class AwbPrint extends Action implements CsrfAwareActionInterface
     public function execute()
     {
         $barCodes = $this->getRequest()->getParam('bar_codes');
+        $format = $this->getRequest()->getParam('format');
 
         if ($barCodes) {
             $urgentCargus = new UrgentCargus();
-            $print = $urgentCargus->printAwb($barCodes);
+            $print = $urgentCargus->printAwb($barCodes, $format);
 
             header('Content-type:application/pdf');
             echo base64_decode($print);

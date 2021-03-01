@@ -2,7 +2,7 @@ function addOrder() {
     require([ 'jquery', 'jquery/ui'], function($){
         let urlq = document.URL;
         let urlvar = urlq.split('/');
-        let single_order_id = urlvar[8];
+        let single_order_id = urlvar[9];
 
         let soil = $('.page-title').html();
         soil = soil.replace('# ', '');
