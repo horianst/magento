@@ -48,26 +48,24 @@ if (!$block->checkCredentials()) {
                         'Deschidere colet',
                         'open_package',
                         'open_package_id',
-                        ['Da', 'Nu'],
+                        ['Nu', 'Da'],
                         $originalValue['open_package'] ?? null
                     );
-                    select('Asigurare', 'insurance', 'insurance_id', ['Da', 'Nu'], $originalValue['insurance'] ?? null);
+                    select('Asigurare', 'insurance', 'insurance_id', ['Nu', 'Da'], $originalValue['insurance'] ?? null);
                     select(
                         'Livrare sambata',
                         'saturday_delivery',
                         'saturday_delivery_id',
-                        ['Da', 'Nu'],
+                        ['Nu', 'Da'],
                         $originalValue['saturday_delivery'] ?? null
                     );
                     select(
                         'Livrare dimineata',
                         'morning_delivery',
                         'morning_delivery_id',
-                        ['Da', 'Nu'],
+                        ['Nu', 'Da'],
                         $originalValue['morning_delivery'] ?? null
                     );
-
-                    //todo recheck this arrays
                     select(
                         'Ramburs',
                         'repayment',
@@ -75,8 +73,6 @@ if (!$block->checkCredentials()) {
                         ['Numerar', 'Cont colector'],
                         $originalValue['repayment'] ?? null
                     );
-
-
                     select(
                         'Platitor',
                         'payer',
