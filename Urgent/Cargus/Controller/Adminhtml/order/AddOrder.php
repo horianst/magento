@@ -154,7 +154,7 @@ class AddOrder extends Action implements CsrfAwareActionInterface
             $payer = 1;
         }
 
-        if ($preferences['insurance'] == 0) {
+        if ($preferences['insurance'] == 1) {
             $DeclaredValue = round(($data['grand_total'] - $data['shipping_amount']) * $base2ron, 2);
         } else {
             $DeclaredValue = 0;
