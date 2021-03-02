@@ -107,6 +107,10 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
 
         $shippingCost = $this->getShippingCost($request);
 
+        if($shippingCost === false){
+            return false;
+        }
+
         $method->setPrice($shippingCost);
         $method->setCost($shippingCost);
 
@@ -203,7 +207,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         $pickups = $urgentCargus->execute();
 
         if (is_null($pickups)) {
-            die('Nu exista niciun punct de ridicare asociat acestui cont!');
+            return false;
         }
 
         foreach ($pickups as $pick) {
@@ -250,10 +254,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         $calculate = $urgentCargus->ShippingCalculation($fields);
 
         if (is_null($calculate) || isset($calculate->Error)) {
-            echo '<pre>';
-            print_r($calculate);
-            print_r($fields);
-            die();
+            return false;
         }
 
         $total = round($calculate->GrandTotal * $ron2base, 2);
