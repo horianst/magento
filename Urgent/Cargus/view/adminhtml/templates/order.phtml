@@ -19,7 +19,7 @@ if (is_array($pickupPoints)) {
     }
 }
 
-if ($block->getRequest()->getParam('collect_point')) {
+if ($block->getRequest()->getParam('collect_point') != null ) {
     $originalValue['collect_point'] = $block->getRequest()->getParam('collect_point');
 } else {
     $originalValue = $block->getConfigParams();
@@ -183,7 +183,8 @@ if (count($awbs) == 0) {
         'print_format',
         'print_format_id',
         ['A4', '10x14'],
-         null
+         null,
+        false
     );
     button('Printeaza AWB-urile bifate', 'printValidate()');
     button('Finalizeaza comanda', 'finalizareComanda()');
@@ -239,12 +240,17 @@ function secondTableRow($index, $awb)
     echo '<td><div class="data-grid-cell-content">' . $awb->Status . '</div></td>';
 }
 
-function select($name, $id, $data, $select)
+function select($name, $id, $data, $select, $onChange = true)
 {
     echo '<div class="admin__field" style="display: inline-block;">
-                <div class="admin__field-control">
-                    <select class="admin__control-select"  name="' . $name . '" id="' . $id . '" onchange="document.getElementById(\'pickup_form\').submit();">
-                    ';
+                <div class="admin__field-control">';
+
+    if($onChange){
+        echo '<select class="admin__control-select"  name="' . $name . '" id="' . $id . '" onchange="document.getElementById(\'pickup_form\').submit();">';
+    } else {
+        echo '<select class="admin__control-select"  name="' . $name . '" id="' . $id . '">';
+    }
+
 
     foreach ($data as $index => $value) {
         echo '<option value="' . $index . '" ' . ($select == $index ? 'selected' : '') . '>' . $value . '</option>';
