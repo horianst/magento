@@ -55,6 +55,9 @@ if (count($awbs) == 0) {
                         <span class="data-grid-cell-content">Localitate destinatar</span>
                     </th>
                     <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Cod postal</span>
+                    </th>
+                    <th class="data-grid-th">
                         <span class="data-grid-cell-content">Plicuri</span>
                     </th>
                     <th class="data-grid-th">
@@ -62,6 +65,15 @@ if (count($awbs) == 0) {
                     </th>
                     <th class="data-grid-th">
                         <span class="data-grid-cell-content">Greutare</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Lungime</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Latime</span>
+                    </th>
+                    <th class="data-grid-th">
+                        <span class="data-grid-cell-content">Inaltime</span>
                     </th>
                     <th class="data-grid-th">
                         <span class="data-grid-cell-content">Ramburs numerar</span>
@@ -208,9 +220,13 @@ function firstTableRow($index, $awb, $slimPickupPoints, $originalValue, $block)
     echo '<td><div class="data-grid-cell-content">' . $slimPickupPoints[$originalValue['collect_point']] . '</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb['nume_dest'] . '</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb['localitate_dest'] . ($awb['judet_dest'] ? ', ' : '') . $awb['judet_dest'] . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['cod_postal'] . '</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb['plicuri'] . '</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb['colete'] . '</div></td>';
-    echo '<td><div class="data-grid-cell-content">' . $awb['kilograme'] . '</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['kilograme'] . ' kg</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['lungime'] . ' cm</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['latime'] . ' cm</div></td>';
+    echo '<td><div class="data-grid-cell-content">' . $awb['inaltime'] . ' cm</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb['ramburs_numerar'] . ' lei</div></td>';
     echo '<td><div class="data-grid-cell-content">' . $awb['ramburs_cont'] . ' lei</div></td>';
     echo '<td><div class="data-grid-cell-content">' . ($awb['platitor_expeditie'] == 2 ? 'Destinatar' : 'Expeditor') . '</div></td>';

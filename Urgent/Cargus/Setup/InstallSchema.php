@@ -44,9 +44,13 @@ class InstallSchema implements InstallSchemaInterface
                 ->addColumn('contact_dest', Table::TYPE_TEXT, 150, ['nullable' => false ])
                 ->addColumn('telefon_dest', Table::TYPE_TEXT, 150, ['nullable' => false ])
                 ->addColumn('email_dest', Table::TYPE_TEXT, 150, ['nullable' => false ])
+                ->addColumn('cod_postal', Table::TYPE_TEXT, 20, ['nullable' => false ])
                 ->addColumn('plicuri', Table::TYPE_INTEGER, 11, ['nullable' => false ])
                 ->addColumn('colete', Table::TYPE_INTEGER, 11, ['nullable' => false ])
                 ->addColumn('kilograme', Table::TYPE_INTEGER, 11, ['nullable' => false ])
+                ->addColumn('lungime', Table::TYPE_INTEGER, 11, ['nullable' => false, 'default' => 0 ])
+                ->addColumn('latime', Table::TYPE_INTEGER, 11, ['nullable' => false, 'default' => 0 ])
+                ->addColumn('inaltime', Table::TYPE_INTEGER, 11, ['nullable' => false, 'default' => 0 ])
                 ->addColumn('valoare_declarata', Table::TYPE_FLOAT, [10, 2], ['nullable' => false ])
                 ->addColumn('ramburs_numerar', Table::TYPE_FLOAT, [10, 2], ['nullable' => false ])
                 ->addColumn('ramburs_cont', Table::TYPE_FLOAT, [10, 2], ['nullable' => false ])
@@ -58,33 +62,6 @@ class InstallSchema implements InstallSchemaInterface
                 ->addColumn('observatii', Table::TYPE_TEXT, 500, ['nullable' => false ])
                 ->addColumn('continut', Table::TYPE_TEXT, 500, ['nullable' => false ])
                 ->addColumn('status', Table::TYPE_INTEGER, 1, ['nullable' => false ]);
-            $setup->getConnection()->createTable($table);
-        }
-
-        $tableName = $setup->getTable('awb_counties');
-
-        if ($setup->getConnection()->isTableExists($tableName) != true) {
-            $table = $setup->getConnection()
-                ->newTable($tableName)
-                ->addColumn('id', Table::TYPE_INTEGER, 11, ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true], 'ID')
-                ->addColumn('name', Table::TYPE_TEXT, 64, ['nullable' => false ])
-                ->addColumn('abbreviation', Table::TYPE_TEXT, 4, ['nullable' => false ])
-                ->addColumn('country_id', Table::TYPE_INTEGER, 11, ['nullable' => false ]);
-            $setup->getConnection()->createTable($table);
-        }
-
-        $tableName = $setup->getTable('awb_localities');
-
-        $table = $setup->getConnection()
-            ->newTable($tableName)
-            ->addColumn('id', Table::TYPE_INTEGER, 11, ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true], 'ID')
-            ->addColumn('name', Table::TYPE_TEXT, 64, ['nullable' => false ])
-            ->addColumn('parent_id', Table::TYPE_INTEGER, 11, ['nullable' => false ])
-            ->addColumn('extra_km', Table::TYPE_INTEGER, 11, ['nullable' => false ])
-            ->addColumn('in_network', Table::TYPE_INTEGER, 1, ['nullable' => false ])
-            ->addColumn('county_id', Table::TYPE_INTEGER, 11, ['nullable' => false ])
-            ->addColumn('country_id', Table::TYPE_INTEGER, 11, ['nullable' => false ]);
-        if ($setup->getConnection()->isTableExists($tableName) != true) {
             $setup->getConnection()->createTable($table);
         }
 

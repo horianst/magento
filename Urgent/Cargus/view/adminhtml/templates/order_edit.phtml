@@ -226,6 +226,23 @@ $cities = $block->getCities($data['judet_dest']);
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Cod postal</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'cod_postal',
+                            'text',
+                            'cod_postal_id',
+                            $data['cod_postal'] ?? null
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
             </tbody>
             <thead>
             <tr>
@@ -282,6 +299,60 @@ $cities = $block->getCities($data['judet_dest']);
                             'kilograme_id',
                             $data['kilograme'] ?? null,
                             ' kg'
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Lungime</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'lungime',
+                            'number',
+                            'lungime_id',
+                            $data['lungime'] ?? null,
+                            ' cm'
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Latime</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'latime',
+                            'number',
+                            'latime_id',
+                            $data['latime'] ?? null,
+                            ' cm'
+                        );
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="data-grid-cell-content">Inaltime</div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                        input(
+                            'inaltime',
+                            'number',
+                            'inaltime_id',
+                            $data['inaltime'] ?? null,
+                            ' cm'
                         );
                         ?>
                     </div>
