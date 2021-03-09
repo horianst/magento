@@ -439,7 +439,7 @@ $cities = $block->getCities($data['judet_dest']);
                         select(
                             'platitor_expeditie',
                             'platitor_expeditie',
-                            ['Expeditior', 'Destinatar'],
+                            [1 => 'Expeditior', 2 => 'Destinatar'],
                             $data['payer'] ?? null
                         );
                         ?>
@@ -456,7 +456,7 @@ $cities = $block->getCities($data['judet_dest']);
                         select(
                             'livrare_dimineata',
                             'livrare_dimineata_id',
-                            ['Da', 'Nu'],
+                            ['Nu', 'Da'],
                             $data['livrare_dimineata'] ?? null
                         );
                         ?>
@@ -473,7 +473,7 @@ $cities = $block->getCities($data['judet_dest']);
                         select(
                             'livrare_sambata',
                             'livrare_sambata_id',
-                            ['Da', 'Nu'],
+                            ['Nu', 'Da'],
                             $data['livrare_sambata'] ?? null
                         );
                         ?>
@@ -490,7 +490,7 @@ $cities = $block->getCities($data['judet_dest']);
                         select(
                             'deschidere_colet',
                             'deschidere_colet_id',
-                            ['Da', 'Nu'],
+                            ['Nu', 'Da'],
                             $data['deschidere_colet'] ?? null
                         );
                         ?>

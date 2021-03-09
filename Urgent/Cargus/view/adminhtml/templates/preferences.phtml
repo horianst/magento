@@ -77,7 +77,7 @@ if (!$block->checkCredentials()) {
                         'Platitor',
                         'payer',
                         'payer_id',
-                        ['Expeditior', 'Destinatar'],
+                        [1 => 'Expeditior', 2 => 'Destinatar'],
                         $originalValue['payer'] ?? null
                     );
                     select(

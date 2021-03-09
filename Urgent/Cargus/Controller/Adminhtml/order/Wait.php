@@ -120,7 +120,7 @@ class Wait extends Action implements CsrfAwareActionInterface
                         "ParcelCodes" => [
                             [
                                 "Code"=> 0,
-                                "Type"=>   $item['parcels'] > 0 ? 1 : 0,
+                                "Type"=>   $item['colete'] > 0 ? 1 : 0,
                                 "Weight" => $item['kilograme'],
                                 "Length" => $item['lungime'],
                                 "Width" => $item['latime'],
