@@ -314,7 +314,8 @@ function select($name, $id, $data, $select, $onChange = true)
                 var url = "<?php echo $block->getUrl('cargus/order/AwbPrint'); ?>";
                 var stringCodes = "[" + codes.join(",") + "]";
                 window.open(url + "?bar_codes=" + stringCodes + "&format=" + format, "", "width=900, height=600, left=50, top=50");
-                location.reload();
+
+                setTimeout(location.reload(), 3000);
             }
             return false;
         });

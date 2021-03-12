@@ -86,5 +86,45 @@ function addOrders() {
     });
 }
 
+require([ 'jquery', 'jquery/ui'], function($,url){
+    $(function () {
+        function do_replace(url) {
+            var element = $("[id='order-billing_address_city']");
+            var value = element.val();
+
+            var field_judet = $("select[id='order-billing_address_region_id']");
+            if (field_judet != null) {
+                $.post('../../../../../../cargus/get/cities?id=' + field_judet.val() + '&val=' + value, function (data) {
+                    if (data != 'null')  {
+                        var cagusElement = $("[name='cargus_select']");
+
+                        if(cagusElement){
+                            cagusElement.remove();
+                        }
+
+                        element.prop('type', 'hidden');
+                        element.after('<select name="cargus_select" class="required-entry required-entry _required select admin__control-select" id="cargus_select">' + data + '</select>');
+                        cagusElement = $("[name='cargus_select']");
+
+                        cagusElement.on('change', function (){
+                            var element = $("[id='order-billing_address_city']");
+
+                            element.val(cagusElement.val()).change();
+                        });
+                    }
+                });
+            }
+        }
+
+        $('input[name="city"]').each(function () {
+            do_replace(url);
+        });
+
+        $(document).on('change', 'select[id="order-billing_address_region_id"], select[id="order-billing_address_country_id"]', function () {
+            do_replace(url);
+        });
+    });
+});
+
 
 

@@ -80,7 +80,7 @@ class AddOrder extends Action implements CsrfAwareActionInterface
 
         $connection = $this->_resource->getConnection(ResourceConnection::DEFAULT_CONNECTION);
 
-        $existing = $connection->fetchAll("SELECT `id` FROM `awb_expeditii` WHERE `order_id`='" . $orderName . "'");
+        $existing = $connection->fetchAll("SELECT `id` FROM `awb_expeditii` WHERE `order_id`='" . $orderId . "'");
 
         if ($existing) {
             echo 'old';

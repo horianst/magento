@@ -4,8 +4,8 @@
        <carriers>
            <customshipping>
                <active>0</active>
-               <title>Magenest Shipping Title</title>
-               <name>Magenest Shipping Method Name</name>
+               <title>Cargus</title>
+               <name>Standard</name>
                <shipping_cost>10</shipping_cost>
                <sallowspecific>0</sallowspecific>
                <sort_order>15</sort_order>

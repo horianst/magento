@@ -25,16 +25,16 @@ class UrgentCargus
     {
         $objectManager = ObjectManager::getInstance();
         $this->url = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue(
-            'carriers/urgentcargusshipping/urgent_cargus_api_url'
+            'carriers/customshipping/urgent_cargus_api_url'
         );
         $this->key = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue(
-            'carriers/urgentcargusshipping/urgent_cargus_api_key'
+            'carriers/customshipping/urgent_cargus_api_key'
         );
         $this->user = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue(
-            'carriers/urgentcargusshipping/urgent_cargus_username'
+            'carriers/customshipping/urgent_cargus_username'
         );
         $this->password = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue(
-            'carriers/urgentcargusshipping/urgent_cargus_password'
+            'carriers/customshipping/urgent_cargus_password'
         );
 
         $this->token = $this->login();
