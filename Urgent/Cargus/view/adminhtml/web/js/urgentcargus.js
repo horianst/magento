@@ -5,7 +5,7 @@ function addOrder() {
         let single_order_id = urlvar[9];
 
         let soil = $('.page-title').html();
-        soil = soil.replace('# ', '');
+        soil = soil.replace('#', '');
 
         let ajaxRequest;
 
@@ -44,7 +44,6 @@ function addOrders() {
         $("input:checkbox[id^=idscheck]:checked").each(function () {
             let id = $(this).val();
             var id_long = $(this).closest('td').next('td').find('div').text();
-
 
             ajaxRequest = $.ajax({
                 async: false,

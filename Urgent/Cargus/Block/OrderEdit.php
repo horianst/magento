@@ -101,8 +101,7 @@ class OrderEdit extends Template
             $localities = $urgentCargus->getCities($counties[strtolower($countyCode)]);
 
             foreach ($localities as $locality) {
-                $index = $locality->InNetwork ? 0 : $locality->ExtraKm;
-                $cities[$index] = $locality->Name;
+                $cities[] = $locality->Name;
             }
         }
 
