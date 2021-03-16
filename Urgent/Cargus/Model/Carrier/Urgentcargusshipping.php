@@ -246,9 +246,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
             'OpenPackage' => ($params['open_package'] != 1 ? false : true),
             'SaturdayDelivery' => ($params['saturday_delivery'] != 1 ? false : true),
             'MorningDelivery' => ($params['morning_delivery'] != 1 ? false : true),
-            'ShipmentPayer' => ($params['payer'] != 'recipient' ? 1 : 2),
-            'ServiceId' => ($params['payer'] != 'recipient' ? 1 : 4),
-            'PriceTableId' => null
+            'ShipmentPayer' => ($params['payer'] != 'recipient' ? 1 : 2)
         );
 
         $calculate = $urgentCargus->ShippingCalculation($fields);
