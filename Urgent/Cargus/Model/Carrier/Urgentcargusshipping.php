@@ -184,7 +184,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
             $DeclaredValue = 0;
         }
 
-        if ($params['repayment'] == 'bank') {
+        if ($params['repayment'] == 1) {
             $CashRepayment = 0;
             $BankRepayment = round($valoare, 2);
         } else {
@@ -257,11 +257,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
 
         $total = round($calculate->GrandTotal * $ron2base, 2);
 
-        if ($request->getFreeShipping()) {
-            return 0;
-        } else {
-            return $total;
-        }
+        return $total;
     }
 
     /**
