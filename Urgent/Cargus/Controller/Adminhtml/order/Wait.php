@@ -130,6 +130,18 @@ class Wait extends Action implements CsrfAwareActionInterface
                         ]
                     ];
 
+                    $params = unserialize($this->scopeConfig->getValue('urgent/cargus/preferences'));
+
+                    if($params['service'] == 1) {
+                        if($item['kilograme'] <= 31){
+                            $fields['ServiceId'] = 34;
+                        } elseif ($item['kilograme'] <= 50){
+                            $fields['ServiceId'] = 35;
+                        } else {
+                            $fields['ServiceId'] = 36;
+                        }
+                    }
+
                     $urgentCargus = new UrgentCargus();
                     $codBara = $urgentCargus->validateAwb($fields);
 

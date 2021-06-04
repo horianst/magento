@@ -31,15 +31,6 @@ class Preferences extends Template
         $this->data = $data;
     }
 
-    public function checkCredentials()
-    {
-        //todo check credentials
-        //login in the U.C. api and check if the user is accepted
-        //in original code is commented out and the method returns true
-
-        return true;
-    }
-
     public function getPickupPoints()
     {
         $urgentCargus = new UrgentCargus();

@@ -139,7 +139,7 @@ class AddOrder extends Action implements CsrfAwareActionInterface
 
         $preferences = unserialize($this->scopeConfig->getValue('urgent/cargus/preferences'));
 
-        if ($preferences['payer'] != 1 || ($preferences['fixed_cost_transport'] || $preferences['fixed_cost_transport'] == '0')) {
+        if ($preferences['payer'] == 1 || ($preferences['fixed_cost_transport'] || $preferences['fixed_cost_transport'] == '0')) {
             $payer = 1;
             $valoareRamburs = round($data['grand_total'] * $base2ron, 2);
         } else {

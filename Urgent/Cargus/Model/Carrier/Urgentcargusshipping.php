@@ -132,7 +132,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         if (strtolower($baseCode) != 'ron') {
             $allowedCurrencies = $this->currenciesModel->getConfigAllowCurrencies();
             $baseRates = $this->currenciesModel->getCurrencyRates($baseCode, array_values($allowedCurrencies));
-            $rates = array();
+            $rates = [];
             foreach ($baseRates as $k => $v) {
                 $rates[strtolower($k)] = $v;
             }
@@ -203,7 +203,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         $urgentCargus = new UrgentCargus();
 
         // UC punctul de ridicare default
-        $location = array();
+        $location = [];
         $pickups = $urgentCargus->execute();
 
         if (is_null($pickups)) {
@@ -227,7 +227,7 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         }
 
         // UC shipping calculation
-        $fields = array(
+        $fields = [
             'FromLocalityId' => $location->LocationId,
             'ToLocalityId' => 0,
             'FromCountyName' => '',
@@ -247,7 +247,17 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
             'SaturdayDelivery' => ($params['saturday_delivery'] != 1 ? false : true),
             'MorningDelivery' => ($params['morning_delivery'] != 1 ? false : true),
             'ShipmentPayer' => ($params['payer'] != 'recipient' ? 1 : 2)
-        );
+        ];
+
+        if($params['service'] == 1) {
+            if($weight <= 31){
+                $fields['ServiceId'] = 34;
+            } elseif ($weight <= 50){
+                $fields['ServiceId'] = 35;
+            } else {
+                $fields['ServiceId'] = 36;
+            }
+        }
 
         $calculate = $urgentCargus->ShippingCalculation($fields);
 

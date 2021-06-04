@@ -23,104 +23,108 @@ if (is_array($pickupPoints)) {
     }
 }
 
-if (!$block->checkCredentials()) {
-    echo '<br>Userul sau parola contului de utilizator folosit nu sunt corecte!';
+if (!$go) {
+    echo '<br>Pe acest cont de utilizator nu este definit niciun punct de ridicare!<br>Logati-va pe site-ul Cargus si asignati un punct de ridicare acestui cont.';
 } else {
-    if (!$go) {
-        echo '<br>Pe acest cont de utilizator nu este definit niciun punct de ridicare!<br>Logati-va pe site-ul Cargus si asignati un punct de ridicare acestui cont.';
-    } else {
-        ?>
+    ?>
 
-        <form method="post" id="preferences_form_id">
-            <div class="admin__fieldset-wrapper-content _hide">
-                <fieldset class="admin__fieldset">
-                    <input name="form_key" type="hidden" value="<?php
-                    echo $block->getFormKey(); ?>"/>
-                    <?php
-                    select(
-                        'Punctul de ridicare',
-                        'collect_point',
-                        'collect_point_id',
-                        $slimPickupPoints,
-                        $originalValue['collect_point'] ?? null
-                    );
-                    select(
-                        'Deschidere colet',
-                        'open_package',
-                        'open_package_id',
-                        ['Nu', 'Da'],
-                        $originalValue['open_package'] ?? null
-                    );
-                    select('Asigurare', 'insurance', 'insurance_id', ['Nu', 'Da'], $originalValue['insurance'] ?? null);
-                    select(
-                        'Livrare sambata',
-                        'saturday_delivery',
-                        'saturday_delivery_id',
-                        ['Nu', 'Da'],
-                        $originalValue['saturday_delivery'] ?? null
-                    );
-                    select(
-                        'Livrare dimineata',
-                        'morning_delivery',
-                        'morning_delivery_id',
-                        ['Nu', 'Da'],
-                        $originalValue['morning_delivery'] ?? null
-                    );
-                    select(
-                        'Ramburs',
-                        'repayment',
-                        'repayment_id',
-                        ['Numerar', 'Cont colector'],
-                        $originalValue['repayment'] ?? null
-                    );
-                    select(
-                        'Platitor',
-                        'payer',
-                        'payer_id',
-                        [1 => 'Expeditior', 2 => 'Destinatar'],
-                        $originalValue['payer'] ?? null
-                    );
-                    select(
-                        'Localitati',
-                        'cities',
-                        'cities_id',
-                        [
-                            'Apeleaza serverul pentru obtinerea localitatilor',
-                            'Utilizeaza lista de localitati salvata local'
-                        ],
-                        $originalValue['cities'] ?? null
-                    );
-                    select(
-                        'Tip expeditie implicita',
-                        'expedition_type',
-                        'expedition_type_id',
-                        ['Colet', 'Plic'],
-                        $originalValue['expedition_type'] ?? null
-                    );
-                    input(
-                        'Plafon transport gratuit',
-                        'max_free_transport',
-                        'number',
-                        'max_free_transport_id',
-                        $originalValue['max_free_transport'] ?? null
-                    );
-                    input(
-                        'Cost fix transport',
-                        'fixed_cost_transport',
-                        'number',
-                        'fixed_cost_transport_id',
-                        $originalValue['fixed_cost_transport'] ?? null
-                    );
+    <form method="post" id="preferences_form_id">
+        <div class="admin__fieldset-wrapper-content _hide">
+            <fieldset class="admin__fieldset">
+                <input name="form_key" type="hidden" value="<?php
+                echo $block->getFormKey(); ?>"/>
+                <?php
+                select(
+                    'Punctul de ridicare',
+                    'collect_point',
+                    'collect_point_id',
+                    $slimPickupPoints,
+                    $originalValue['collect_point'] ?? null
+                );
+                select(
+                    'Deschidere colet',
+                    'open_package',
+                    'open_package_id',
+                    ['Nu', 'Da'],
+                    $originalValue['open_package'] ?? null
+                );
+                select('Asigurare', 'insurance', 'insurance_id', ['Nu', 'Da'], $originalValue['insurance'] ?? null);
+                select(
+                    'Livrare sambata',
+                    'saturday_delivery',
+                    'saturday_delivery_id',
+                    ['Nu', 'Da'],
+                    $originalValue['saturday_delivery'] ?? null
+                );
+                select(
+                    'Livrare dimineata',
+                    'morning_delivery',
+                    'morning_delivery_id',
+                    ['Nu', 'Da'],
+                    $originalValue['morning_delivery'] ?? null
+                );
+                select(
+                    'Ramburs',
+                    'repayment',
+                    'repayment_id',
+                    ['Numerar', 'Cont colector'],
+                    $originalValue['repayment'] ?? null
+                );
+                select(
+                    'Platitor',
+                    'payer',
+                    'payer_id',
+                    [1 => 'Expeditior', 2 => 'Destinatar'],
+                    $originalValue['payer'] ?? null
+                );
+                select(
+                    'Localitati',
+                    'cities',
+                    'cities_id',
+                    [
+                        'Apeleaza serverul pentru obtinerea localitatilor',
+                        'Utilizeaza lista de localitati salvata local'
+                    ],
+                    $originalValue['cities'] ?? null
+                );
+                select(
+                    'Tip expeditie implicita',
+                    'expedition_type',
+                    'expedition_type_id',
+                    ['Colet', 'Plic'],
+                    $originalValue['expedition_type'] ?? null
+                );
+                input(
+                    'Plafon transport gratuit',
+                    'max_free_transport',
+                    'number',
+                    'max_free_transport_id',
+                    $originalValue['max_free_transport'] ?? null
+                );
+                input(
+                    'Cost fix transport',
+                    'fixed_cost_transport',
+                    'number',
+                    'fixed_cost_transport_id',
+                    $originalValue['fixed_cost_transport'] ?? null
+                );
+                select(
+                    'Serviciu',
+                    'service',
+                    'service_id',
+                    [0 => "Inactiv", 1 => "Activ"],
+                    $originalValue['service'] ?? null
+                );
 
-                    submitButton('Salveaza preferintele', 'preferences_form_id');
-                    ?>
+                submitButton('Salveaza preferintele', 'preferences_form_id');
+                ?>
 
-                </fieldset>
-            </div>
-        </form>
-        <?php
-    }
+            </fieldset>
+        </div>
+    </form>
+    <?php
 }
+
 
 function select($label, $name, $id, $data, $select)
 {
