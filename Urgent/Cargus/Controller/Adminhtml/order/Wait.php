@@ -21,17 +21,23 @@ class Wait extends Action implements CsrfAwareActionInterface
      * @var ResourceConnection
      */
     private $_resource;
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
 
     /**
      * Wait constructor.
      *
      * @param Context $context
      * @param ResourceConnection $resource
+     * @param ScopeConfigInterface $scopeConfig
      */
-    public function __construct(Context $context, ResourceConnection $resource)
+    public function __construct(Context $context, ResourceConnection $resource, ScopeConfigInterface $scopeConfig)
     {
         parent::__construct($context);
         $this->_resource = $resource;
+        $this->scopeConfig = $scopeConfig;
     }
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException

@@ -164,6 +164,11 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
         $params = unserialize($this->scopeConfig->getValue('urgent/cargus/preferences'));
 
         // obtine totalul cosului din request
+
+        foreach ($request->getAllItems() as $item) {
+            $request->setPackageValue($request->getPackageValue() + $item->getTaxAmount());
+        }
+
         $valoare = $request->getPackageValue() * $base2ron;
 
         // stabilesc daca se ofera transport gratuit
@@ -243,9 +248,9 @@ class Urgentcargusshipping extends AbstractCarrier implements CarrierInterface
             'OtherRepayment' => '',
             'PaymentInstrumentId' => 0,
             'PaymentInstrumentValue' => 0,
-            'OpenPackage' => ($params['open_package'] != 1 ? false : true),
-            'SaturdayDelivery' => ($params['saturday_delivery'] != 1 ? false : true),
-            'MorningDelivery' => ($params['morning_delivery'] != 1 ? false : true),
+            'OpenPackage' => !($params['open_package'] != 1),
+            'SaturdayDelivery' => !($params['saturday_delivery'] != 1),
+            'MorningDelivery' => !($params['morning_delivery'] != 1),
             'ShipmentPayer' => ($params['payer'] != 'recipient' ? 1 : 2)
         ];
 

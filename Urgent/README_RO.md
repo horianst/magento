@@ -17,7 +17,7 @@
 - in linia de comanda intra in directorul radacina al proiectului
 - ruleaza comanda `bin/magento module:status`, Modulul Urgent_Cargus ar trebui sa fie disabled
 - ca sa activezi modulul ruleaza comanda `bin/magento module:enable Urgent_Cargus`
-- pentru ca modificarile sa aibaefect ruleaza comenzile: `bin/magento setup:upgrade`, `bin/magento setup:di:compile` si `bin/magento cache:flush`
+- pentru ca modificarile sa aiba efect ruleaza comenzile: `bin/magento setup:upgrade`, `bin/magento setup:di:compile` si `bin/magento cache:flush`
 - Se acceseaza pagina `Stores`, `Configuration`, `Sales`, `Shipping Methods`, se deschide tab-ul `Cargus`, se completeaza formularul si se apasa butonul portocaliu `Save Config` din partea dreapta-sus a paginii
 
 ### Configurarea modulului
