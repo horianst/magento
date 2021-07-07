@@ -10,6 +10,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\View\Result\Page;
 use Urgent\Cargus\Model\UrgentCargus;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Class Wait
