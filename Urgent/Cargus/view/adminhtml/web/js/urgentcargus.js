@@ -1,8 +1,7 @@
 function addOrder() {
     require([ 'jquery', 'jquery/ui'], function($){
         let urlq = document.URL;
-        let urlvar = urlq.split('/');
-        let single_order_id = urlvar[9];
+        let single_order_id = urlq.split('order_id/').pop().split('/key')[0];
 
         let soil = $('.page-title').html();
         soil = soil.replace('#', '');

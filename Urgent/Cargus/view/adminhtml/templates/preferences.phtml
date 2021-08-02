@@ -99,14 +99,40 @@ if (!$go) {
                     'max_free_transport',
                     'number',
                     'max_free_transport_id',
-                    $originalValue['max_free_transport'] ?? null
+                    $originalValue['max_free_transport'] ?? null,
+                    true
                 );
                 input(
                     'Cost fix transport',
                     'fixed_cost_transport',
                     'number',
                     'fixed_cost_transport_id',
-                    $originalValue['fixed_cost_transport'] ?? null
+                    $originalValue['fixed_cost_transport'] ?? null,
+                    true
+                );
+                input(
+                    'Lungime colet',
+                    'lungime',
+                    'number',
+                    'lungime_id',
+                    $originalValue['lungime'] ?? null,
+                    true
+                );
+                input(
+                    'Latime colet',
+                    'latime',
+                    'number',
+                    'latime_id',
+                    $originalValue['latime'] ?? null,
+                    true
+                );
+                input(
+                    'Inaltime colet',
+                    'inaltime',
+                    'number',
+                    'inaltime_id',
+                    $originalValue['inaltime'] ?? null,
+                    true
                 );
                 select(
                     'Serviciu',
@@ -149,7 +175,7 @@ function select($label, $name, $id, $data, $select)
             </div>';
 }
 
-function input($label, $name, $type, $id, $data)
+function input($label, $name, $type, $id, $data, $step = false)
 {
     echo '<div class="admin__field">
                 <div class="admin__field-label">
@@ -160,7 +186,7 @@ function input($label, $name, $type, $id, $data)
                     </label>
                 </div>
                 <div class="admin__field-control">
-                    <input class="admin__control-text" type="' . $type . '" name="' . $name . '" id="' . $id . '" value="' . $data . '">
+                    <input class="admin__control-text" type="' . $type . '" name="' . $name . '" id="' . $id . '"' . ($step ? ' step="0.01"' : '') . ' value="' . $data . '">
                 </div>
             </div>';
 }

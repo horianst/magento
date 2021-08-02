@@ -4,8 +4,8 @@ require([ 'jquery', 'jquery/ui'], function($,url){
             var element = $("[name='city']");
             var value = element.val();
 
-            var field_judet = $("select[name='region_id']");
-            if (field_judet != null) {
+            var field_judet = $("select[name='region_id']").val();
+            if (field_judet.toString() !== null && field_judet.toString() !== '' && field_judet.toString() !== 'undefined') {
                 $.post(BASE_URL + 'cargus/get/cities?id=' + field_judet.val() + '&val=' + value, function (data) {
                     if (data != 'null')  {
                         var cagusElement = $("[name='cargus_select']");

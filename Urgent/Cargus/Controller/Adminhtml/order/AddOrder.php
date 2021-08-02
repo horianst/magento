@@ -163,9 +163,9 @@ class AddOrder extends Action implements CsrfAwareActionInterface
         if (strpos($data['method'], 'cashondelivery') !== false) {
             if ($preferences['repayment'] == 1) {
                 $CashRepayment = 0;
-                $BankRepayment = round($valoareRamburs, 2);
+                $BankRepayment = $valoareRamburs;
             } else {
-                $CashRepayment = round($valoareRamburs, 2);
+                $CashRepayment = $valoareRamburs;
                 $BankRepayment = 0;
             }
         } else {
@@ -201,6 +201,9 @@ class AddOrder extends Action implements CsrfAwareActionInterface
                             `plicuri`,
                             `colete`,
                             `kilograme`,
+                            `lungime`,
+                            `latime`,
+                            `inaltime`
                             `valoare_declarata`,
                             `ramburs_numerar`,
                             `ramburs_cont`,
@@ -228,6 +231,9 @@ class AddOrder extends Action implements CsrfAwareActionInterface
                             '" . $no_envelopes . "',
                             '" . $no_parcels . "',
                             '" . $weight . "',
+                            '" . $preferences['lungime'] . "',
+                            '" . $preferences['latime'] . "',
+                            '" . $preferences['inaltime'] . "',
                             '" . $DeclaredValue . "',
                             '" . $CashRepayment . "',
                             '" . $BankRepayment . "',
