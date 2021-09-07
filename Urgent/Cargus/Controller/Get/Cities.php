@@ -61,11 +61,11 @@ class Cities extends Action
         $judete = array();
         $dataJudete = $urgentCargus->getCounties();
 
-        foreach ($dataJudete as $j) {
-            $judete[strtolower($j->Abbreviation)] = $j->CountyId;
-        }
-
         try{
+            foreach ($dataJudete as $j) {
+                $judete[strtolower($j->Abbreviation)] = $j->CountyId;
+            }
+
             // obtin lista de localitati pe baza abrevierii judetului
             $localitati = $urgentCargus->getCities($judete[strtolower($judet['code'])]);
         }catch (\Exception $e){
