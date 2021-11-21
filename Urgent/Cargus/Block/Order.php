@@ -65,6 +65,12 @@ class Order extends Template
         return $urgentCargus->getPickupPoints();
     }
 
+    public function getPudoPoints()
+    {
+        $urgentCargus = new UrgentCargus();
+        return $urgentCargus->getPudoPoints();
+    }
+
     public function getCurrentOrder($locationId)
     {
         $urgentCargus = new UrgentCargus();

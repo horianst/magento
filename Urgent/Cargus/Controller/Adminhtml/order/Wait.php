@@ -91,11 +91,23 @@ class Wait extends Action implements CsrfAwareActionInterface
                 $errors = [];
                 $done = 0;
                 foreach ($data as $item) {
-                    $fields = [
-                        'Sender' => [
-                            'LocationId' => $item['pickup_location_id']
-                        ],
-                        'Recipient' => [
+
+                    // determine if is PUDO based on value and existance of DeliveryPointId sent from Frontend (frontend needs to send it!!!)
+                    $isPUDO = false;
+                    if(isset($item['DeliveryPudoPoint']) && $item['DeliveryPudoPoint']>0){
+                        $isPUDO = true;
+                    }
+
+                    // set recipient based on if PUDO or not
+                    if($isPUDO){
+                        $recipient = [
+                            'Name' => $item['nume_dest'],
+                            'ContactPerson' => $item['contact_dest'],
+                            'PhoneNumber' => $item['telefon_dest'],
+                            'Email' => $item['email_dest'],
+                        ];
+                    }else{
+                        $recipient = [
                             'LocationId' => null,
                             'Name' => $item['nume_dest'],
                             'CountyId' => null,
@@ -109,7 +121,14 @@ class Wait extends Action implements CsrfAwareActionInterface
                             'PhoneNumber' => $item['telefon_dest'],
                             'Email' => $item['email_dest'],
                             "CodPostal" => $item['cod_postal'],
+                        ];
+                    }
+
+                    $fields = [
+                        'Sender' => [
+                            'LocationId' => $item['pickup_location_id']
                         ],
+                        'Recipient' => $recipient,
                         'Parcels' => $item['colete'],
                         'Envelopes' => $item['plicuri'],
                         'TotalWeight' => $item['kilograme'],
@@ -139,7 +158,9 @@ class Wait extends Action implements CsrfAwareActionInterface
 
                     $params = unserialize($this->scopeConfig->getValue('urgent/cargus/preferences'));
 
-                    if($params['service'] == 1) {
+                    if($isPUDO){
+                        $fields['ServiceId'] = 38; // hardcoded based on Cargus input
+                    }elseif($params['service'] == 1) {
                         if($item['kilograme'] <= 31){
                             $fields['ServiceId'] = 34;
                         } elseif ($item['kilograme'] <= 50){

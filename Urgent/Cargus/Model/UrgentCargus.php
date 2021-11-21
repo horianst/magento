@@ -326,6 +326,40 @@ class UrgentCargus
         }
     }
 
+    public function getPudoPoints(){
+        // function to get the list of all Pickup Locations, API does not have parameters for scoping to CityId :(
+        // scoping needs to be done in frontend
+        // https://urgentcargus.azure-api.net/api/PudoPoints
+
+        /*
+         * IMPORTANT informatiom
+         *
+         * "id" from response is used to generate AWB
+         * "ServiceCOD"  from response determines if the PUDO can have cash on delivery (boolean)
+         * "PaymentType" from response is: 1 - no method available, 2 - CARD, 3 - CASH + CARD, 4 - CASH
+         *
+         * */
+
+        try {
+            $client = new Client();
+            $response = $client->request(
+                'GET',
+                $this->url . '/PudoPoints',
+                [
+                    'headers' => [
+                        'Ocp-Apim-Subscription-Key' => $this->key,
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Content-Type' => 'application/json'
+                    ]
+                ]
+            );
+            return json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+    }
+
     public function printAwb($barCodes, $format)
     {
         try {
